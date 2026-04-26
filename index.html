@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yukshya — AI Study Bot on WhatsApp</title>
+<meta name="description" content="Save files, get AI explanations, and study smarter — all inside WhatsApp. No app download needed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#0A0A0F;--green1:#25D366;--green2:#128C7E;--purple1:#667eea;--purple2:#764ba2;
+--mint:#00F5A0;--glass:rgba(255,255,255,0.05);--border:rgba(255,255,255,0.1);
+--text:#e0e0e0;--text-muted:#888;--radius:16px;
+}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--green2) var(--bg)}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--green2);border-radius:3px}
+body{
+font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
+overflow-x:hidden;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,h5,h6{font-family:'Poppins',sans-serif;line-height:1.2}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+.cursor-dot,.cursor-ring{
+position:fixed;top:0;left:0;pointer-events:none;z-index:100000;
+border-radius:50%;transform:translate(-50%,-50%);
+transition:opacity .3s;
+}
+.cursor-dot{width:8px;height:8px;background:var(--mint);box-shadow:0 0 15px var(--mint)}
+.cursor-ring{width:36px;height:36px;border:1.5px solid rgba(0,245,160,.4);transition:width .2s,height .2s}
+@media(max-width:768px){.cursor-dot,.cursor-ring{display:none}}
+@media(prefers-reduced-motion:reduce){
+.cursor-dot,.cursor-ring{display:none}
+*{animation-duration:0.01ms!important;transition-duration:0.01ms!important}
+}
+
+.social-sidebar{
+position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:999;
+display:flex;flex-direction:column;gap:4px;padding:12px 8px;
+background:rgba(10,10,15,.8);backdrop-filter:blur(20px);
+border-right:1px solid var(--border);border-radius:0 12px 12px 0;
+}
+.social-sidebar a{
+width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+border-radius:10px;color:#888;font-size:18px;transition:all .3s ease;position:relative;
+}
+.social-sidebar a:hover{color:#fff;transform:scale(1.15)}
+.social-sidebar a .tooltip{
+position:absolute;left:52px;background:rgba(0,0,0,.9);color:#fff;
+padding:4px 12px;border-radius:6px;font-size:12px;white-space:nowrap;
+opacity:0;pointer-events:none;transition:all .3s;transform:translateX(-8px);
+font-family:'Inter',sans-serif;
+}
+.social-sidebar a:hover .tooltip{opacity:1;transform:translateX(0)}
+.social-sidebar .wa-bot{color:var(--green1)}
+.social-sidebar .wa-bot:hover{background:rgba(37,211,102,.15);box-shadow:0 0 20px rgba(37,211,102,.3)}
+.social-sidebar .ig:hover{background:rgba(225,48,108,.15);color:#E1306C;box-shadow:0 0 20px rgba(225,48,108,.3)}
+.social-sidebar .fb:hover{background:rgba(24,119,242,.15);color:#1877F2;box-shadow:0 0 20px rgba(24,119,242,.3)}
+.social-sidebar .em:hover{background:rgba(102,126,234,.15);color:var(--purple1);box-shadow:0 0 20px rgba(102,126,234,.3)}
+@keyframes pulse-green{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.4)}70%{box-shadow:0 0 0 10px rgba(37,211,102,0)}}
+.social-sidebar .wa-bot{animation:pulse-green 2s infinite}
+.icon-svg{width:20px;height:20px;fill:currentColor;flex-shrink:0}
+@media(max-width:768px){.social-sidebar{display:none}}
+
+.navbar{
+position:fixed;top:0;left:0;right:0;z-index:1000;
+padding:16px 0;transition:all .4s ease;
+}
+.navbar.scrolled{
+background:rgba(10,10,15,.9);backdrop-filter:blur(20px);
+border-bottom:1px solid var(--border);padding:10px 0;
+box-shadow:0 4px 30px rgba(0,0,0,.3);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;padding:0 24px}
+.nav-logo{font-family:'Poppins',sans-serif;font-weight:800;font-size:24px;
+background:linear-gradient(135deg,var(--green1),var(--mint));-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:8px}
+.nav-logo span{font-size:20px;-webkit-text-fill-color:initial}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{color:var(--text-muted);font-size:14px;font-weight:500;transition:color .3s;position:relative}
+.nav-links a:hover{color:#fff}
+.nav-links a::after{
+content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;
+background:linear-gradient(90deg,var(--green1),var(--mint));transition:width .3s;border-radius:1px;
+}
+.nav-links a:hover::after{width:100%}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-socials{display:flex;gap:12px}
+.nav-socials a{color:#666;font-size:16px;transition:all .3s}
+.nav-socials a:hover{color:#fff;transform:scale(1.2)}
+.btn-cta{
+display:inline-flex;align-items:center;gap:8px;
+padding:10px 24px;border-radius:50px;font-size:14px;font-weight:600;
+background:linear-gradient(135deg,var(--green1),var(--green2));color:#fff;
+border:none;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;
+font-family:'Inter',sans-serif;
+}
+.btn-cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(37,211,102,.4)}
+.btn-cta .ripple{
+position:absolute;border-radius:50%;background:rgba(255,255,255,.3);
+transform:scale(0);animation:ripple-anim .6s linear;
+}
+@keyframes ripple-anim{to{transform:scale(4);opacity:0}}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;z-index:1001}
+.hamburger span{width:24px;height:2px;background:#fff;transition:all .3s;border-radius:2px}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mobile-menu{
+position:fixed;top:0;left:0;right:0;bottom:0;
+background:rgba(10,10,15,.98);backdrop-filter:blur(30px);
+z-index:999;display:flex;flex-direction:column;align-items:center;
+justify-content:center;gap:24px;opacity:0;pointer-events:none;transition:all .4s;
+}
+.mobile-menu.active{opacity:1;pointer-events:all}
+.mobile-menu a{color:#fff;font-size:20px;font-weight:600;font-family:'Poppins',sans-serif}
+.mobile-menu .mobile-socials{display:flex;gap:20px;margin-top:20px}
+.mobile-menu .mobile-socials a{font-size:24px;color:#888}
+@media(max-width:768px){
+.nav-links,.nav-socials{display:none}
+.hamburger{display:flex}
+}
+
+#hero{
+min-height:100vh;display:flex;align-items:center;position:relative;
+padding:120px 0 80px;overflow:hidden;
+}
+#particles-canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
+.hero-inner{
+display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
+position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:0 24px;
+}
+.hero-badge{
+display:inline-flex;align-items:center;gap:8px;
+padding:8px 20px;border-radius:50px;font-size:13px;font-weight:500;
+background:var(--glass);border:1px solid var(--border);color:var(--mint);
+margin-bottom:24px;position:relative;overflow:hidden;
+}
+.hero-badge::before{
+content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);
+animation:shimmer 3s infinite;
+}
+@keyframes shimmer{0%{left:-100%}100%{left:100%}}
+.hero-title{font-size:clamp(36px,5vw,64px);font-weight:800;margin-bottom:20px}
+.hero-title .line2{
+background:linear-gradient(135deg,var(--green1),var(--mint));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.typed-cursor{
+display:inline-block;width:3px;height:1em;background:var(--mint);
+margin-left:4px;animation:blink 1s step-end infinite;vertical-align:text-bottom;
+}
+@keyframes blink{50%{opacity:0}}
+.hero-sub{font-size:17px;color:var(--text-muted);max-width:480px;margin-bottom:32px;line-height:1.7}
+.hero-buttons{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:32px}
+.btn-glass{
+display:inline-flex;align-items:center;gap:8px;
+padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;
+background:transparent;color:#fff;border:1px solid var(--border);
+cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif;
+}
+.btn-glass:hover{background:var(--glass);border-color:rgba(255,255,255,.2);transform:translateY(-2px)}
+.hero-proof{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.avatar-group{display:flex}
+.avatar-group .avatar{
+width:36px;height:36px;border-radius:50%;border:2px solid var(--bg);
+margin-left:-10px;display:flex;align-items:center;justify-content:center;
+font-size:12px;font-weight:700;color:#fff;
+}
+.avatar-group .avatar:first-child{margin-left:0}
+.hero-proof-text{font-size:13px;color:var(--text-muted)}
+.hero-proof-text .stars{color:#FFD700}
+
+.phone-wrapper{perspective:1000px;display:flex;justify-content:center;align-items:center}
+.phone-3d{
+width:280px;height:560px;position:relative;
+transform-style:preserve-3d;
+animation:float-phone 6s ease-in-out infinite;
+transition:transform .1s ease-out;
+}
+@keyframes float-phone{0%,100%{transform:translateY(0) rotateY(-5deg) rotateX(2deg)}50%{transform:translateY(-20px) rotateY(5deg) rotateX(-2deg)}}
+.phone-frame{
+width:100%;height:100%;border-radius:36px;
+background:linear-gradient(145deg,#1a1a2e,#16213e);
+border:2px solid rgba(255,255,255,.15);
+box-shadow:0 40px 80px rgba(37,211,102,.15),0 0 60px rgba(37,211,102,.05),
+inset 0 1px 0 rgba(255,255,255,.1);
+overflow:hidden;position:relative;
+}
+.phone-notch{
+width:120px;height:28px;background:#000;border-radius:0 0 16px 16px;
+position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:5;
+}
+.phone-screen{
+position:absolute;top:8px;left:8px;right:8px;bottom:8px;
+background:#0b141a;border-radius:28px;overflow:hidden;
+display:flex;flex-direction:column;
+}
+.wa-header{background:#1f2c33;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.wa-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--green1),var(--green2));
+display:flex;align-items:center;justify-content:center;font-size:14px}
+.wa-name{font-size:13px;font-weight:600;color:#fff}
+.wa-status{font-size:10px;color:var(--green1)}
+.wa-chat{flex:1;padding:12px;overflow:hidden;display:flex;flex-direction:column;gap:6px}
+.chat-msg{
+max-width:85%;padding:8px 12px;border-radius:12px;font-size:11px;
+opacity:0;transform:translateY(10px);transition:all .4s ease;line-height:1.5;
+}
+.chat-msg.visible{opacity:1;transform:translateY(0)}
+.chat-msg.sent{background:#005c4b;align-self:flex-end;border-bottom-right-radius:4px;color:#e0e0e0}
+.chat-msg.received{background:#1f2c33;align-self:flex-start;border-bottom-left-radius:4px;color:#e0e0e0}
+.chat-msg .file-icon{font-size:14px;margin-right:4px}
+@keyframes typing-bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+@media(max-width:768px){
+.hero-inner{grid-template-columns:1fr;text-align:center}
+.hero-sub{margin:0 auto 32px}
+.hero-buttons{justify-content:center}
+.hero-proof{justify-content:center}
+.phone-wrapper{margin-top:40px}
+.phone-3d{width:220px;height:440px}
+}
+
+.stats-strip{
+padding:40px 0;position:relative;z-index:2;
+border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+background:rgba(255,255,255,.02);
+}
+.stats-grid{
+display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+max-width:1200px;margin:0 auto;padding:0 24px;text-align:center;
+}
+.stat-item{position:relative;padding:0 20px}
+.stat-item:not(:last-child)::after{
+content:'';position:absolute;right:0;top:10%;height:80%;width:1px;background:var(--border);
+}
+.stat-number{
+font-family:'Poppins',sans-serif;font-size:clamp(28px,3vw,42px);
+font-weight:800;background:linear-gradient(135deg,var(--green1),var(--mint));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.stat-label{font-size:14px;color:var(--text-muted);margin-top:4px}
+@media(max-width:600px){
+.stats-grid{grid-template-columns:repeat(2,1fr);gap:30px}
+.stat-item:nth-child(2)::after{display:none}
+}
+
+section{padding:100px 0;position:relative}
+.section-badge{
+display:inline-flex;align-items:center;gap:6px;
+padding:6px 16px;border-radius:50px;font-size:12px;font-weight:600;
+background:var(--glass);border:1px solid var(--border);
+color:var(--mint);margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;
+}
+.section-title{font-size:clamp(32px,4vw,48px);font-weight:800;margin-bottom:16px;color:#fff}
+.section-sub{font-size:16px;color:var(--text-muted);max-width:600px;margin:0 auto 60px}
+.text-center{text-align:center}
+
+.reveal{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-60px);transition:all .8s cubic-bezier(.16,1,.3,1)}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(60px);transition:all .8s cubic-bezier(.16,1,.3,1)}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+
+.glass-card{
+background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+border:1px solid var(--border);border-radius:var(--radius);padding:32px;
+transition:all .4s ease;position:relative;overflow:hidden;
+}
+.glass-card::before{
+content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+background:linear-gradient(90deg,transparent,rgba(255,255,255,.03),transparent);
+transition:left .6s;
+}
+.glass-card:hover::before{left:100%}
+.glass-card:hover{border-color:rgba(255,255,255,.2);transform:translateY(-4px)}
+.tilt-card{transform-style:preserve-3d;transition:transform .1s ease-out}
+
+#problems{background:var(--bg)}
+.problems-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:32px}
+.problem-card{text-align:center;padding:40px 24px}
+.problem-icon{font-size:48px;margin-bottom:16px;display:block}
+.problem-text{font-size:16px;font-weight:600;color:#fff}
+.solution-card{
+text-align:center;padding:24px;
+background:rgba(37,211,102,.05);border:1px solid rgba(37,211,102,.3);
+box-shadow:0 0 40px rgba(37,211,102,.1);border-radius:var(--radius);
+}
+.solution-card .problem-icon{font-size:32px}
+.solution-card .problem-text{
+background:linear-gradient(135deg,var(--green1),var(--mint));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:18px;
+}
+@media(max-width:768px){.problems-grid{grid-template-columns:1fr}}
+
+#how-it-works{background:var(--bg);position:relative;overflow:hidden}
+#how-it-works::before{
+content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+background-image:radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);
+background-size:30px 30px;pointer-events:none;
+}
+.steps-container{position:relative;max-width:800px;margin:0 auto}
+.step-line{position:absolute;left:40px;top:0;bottom:0;width:2px;background:var(--border)}
+.step-line-fill{
+position:absolute;left:40px;top:0;width:2px;height:0;
+background:linear-gradient(180deg,var(--green1),var(--purple1));transition:height 1s ease;
+}
+.step{display:flex;gap:32px;margin-bottom:60px;position:relative;align-items:flex-start}
+.step-num{
+width:80px;height:80px;border-radius:50%;
+background:var(--glass);border:2px solid var(--border);
+display:flex;align-items:center;justify-content:center;
+font-family:'Poppins',sans-serif;font-size:24px;font-weight:800;
+color:var(--green1);flex-shrink:0;position:relative;z-index:2;
+}
+.step-content{flex:1;padding-top:16px}
+.step-icon{font-size:32px;margin-bottom:8px;display:block}
+.step-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px}
+.step-desc{color:var(--text-muted);font-size:15px;line-height:1.7}
+.step-bg-num{
+position:absolute;right:-20px;top:-20px;font-family:'Poppins',sans-serif;
+font-size:120px;font-weight:900;color:rgba(255,255,255,.02);pointer-events:none;line-height:1;
+}
+@media(max-width:768px){
+.step{flex-direction:column;align-items:center;text-align:center;gap:16px}
+.step-line,.step-line-fill{display:none}
+.step-bg-num{display:none}
+}
+
+#features{background:var(--bg)}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.feature-card{padding:32px;text-align:center}
+.feature-icon-wrap{
+width:64px;height:64px;border-radius:20px;margin:0 auto 20px;
+background:linear-gradient(135deg,rgba(37,211,102,.15),rgba(0,245,160,.1));
+display:flex;align-items:center;justify-content:center;font-size:28px;
+}
+.feature-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:8px}
+.feature-desc{font-size:14px;color:var(--text-muted);line-height:1.6}
+@media(max-width:900px){.features-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.features-grid{grid-template-columns:1fr}}
+
+#commands{background:var(--bg)}
+.terminal{
+max-width:700px;margin:0 auto;border-radius:12px;overflow:hidden;
+border:1px solid var(--border);background:rgba(0,0,0,.5);
+}
+.terminal-header{
+display:flex;align-items:center;gap:8px;padding:12px 16px;
+background:rgba(37,211,102,.1);border-bottom:1px solid var(--border);
+}
+.terminal-dot{width:12px;height:12px;border-radius:50%}
+.terminal-dot.r{background:#ff5f56}.terminal-dot.y{background:#ffbd2e}.terminal-dot.g{background:#27c93f}
+.terminal-title{color:var(--green1);font-size:13px;font-weight:600;margin-left:8px}
+.terminal-body{padding:24px;font-family:'Courier New',monospace;font-size:14px;min-height:300px}
+.terminal-line{margin-bottom:8px;display:flex;gap:8px;opacity:0;transition:opacity .4s}
+.terminal-line.visible{opacity:1}
+.terminal-line .cmd{color:var(--green1)}
+.terminal-line .arrow{color:var(--text-muted)}
+.terminal-line .result{color:var(--mint)}
+.terminal-cursor{
+display:inline-block;width:8px;height:16px;background:var(--green1);
+animation:blink 1s step-end infinite;vertical-align:text-bottom;
+}
+
+#pricing{background:var(--bg)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:40px}
+.pricing-card-wrap{perspective:1000px;height:420px}
+.pricing-card{
+width:100%;height:100%;position:relative;
+transform-style:preserve-3d;transition:transform .8s cubic-bezier(.4,.2,.2,1);cursor:pointer;
+}
+.pricing-card-wrap:hover .pricing-card{transform:rotateY(180deg)}
+.pricing-front,.pricing-back{
+position:absolute;top:0;left:0;width:100%;height:100%;
+backface-visibility:hidden;-webkit-backface-visibility:hidden;
+border-radius:var(--radius);padding:32px;
+background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+border:1px solid var(--border);
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.pricing-back{transform:rotateY(180deg);text-align:left;justify-content:flex-start;padding-top:40px}
+.pricing-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.pricing-price{font-family:'Poppins',sans-serif;font-size:48px;font-weight:900;color:#fff;margin-bottom:4px}
+.pricing-period{font-size:14px;color:var(--text-muted);margin-bottom:20px}
+.pricing-features{list-style:none;margin-bottom:24px;width:100%}
+.pricing-features li{padding:6px 0;font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:8px}
+.pricing-features li::before{content:'✓';color:var(--green1);font-weight:700}
+.pricing-card-wrap:nth-child(1) .pricing-front{border-color:rgba(37,211,102,.3);box-shadow:0 0 30px rgba(37,211,102,.1)}
+.pricing-card-wrap:nth-child(2) .pricing-front{border-color:rgba(255,189,46,.3);box-shadow:0 0 30px rgba(255,189,46,.1)}
+.pricing-card-wrap:nth-child(3) .pricing-front{border-color:rgba(102,126,234,.3);box-shadow:0 0 30px rgba(102,126,234,.1)}
+.popular-badge{
+position:absolute;top:-12px;right:20px;
+padding:4px 16px;border-radius:50px;font-size:11px;font-weight:700;
+background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;z-index:2;
+}
+.pricing-note{text-align:center;color:var(--text-muted);font-size:14px;margin-bottom:24px}
+.referral-box{
+text-align:center;padding:24px;border-radius:var(--radius);
+background:linear-gradient(135deg,rgba(37,211,102,.1),rgba(0,245,160,.05));
+border:1px solid rgba(37,211,102,.2);max-width:600px;margin:0 auto;
+}
+.referral-box p{font-size:15px;color:var(--text)}
+@media(max-width:768px){.pricing-grid{grid-template-columns:1fr;max-width:360px;margin:0 auto 40px}}
+
+#connect{background:var(--bg)}
+.connect-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.connect-card{
+padding:32px;text-align:center;border-radius:var(--radius);
+background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+border:1px solid var(--border);transition:all .4s ease;
+}
+.connect-card:hover{transform:translateY(-8px)}
+.connect-icon{font-size:40px;margin-bottom:12px;display:block}
+.connect-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:8px}
+.connect-desc{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+.connect-btn{
+display:inline-flex;align-items:center;gap:6px;
+padding:10px 24px;border-radius:50px;font-size:13px;font-weight:600;
+border:1px solid var(--border);color:#fff;background:transparent;
+cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif;
+}
+.connect-card.wa:hover{border-color:rgba(37,211,102,.5);box-shadow:0 0 40px rgba(37,211,102,.15)}
+.connect-card.wa:hover .connect-btn{background:var(--green1);border-color:var(--green1)}
+.connect-card.wa-support:hover{border-color:rgba(18,140,126,.5);box-shadow:0 0 40px rgba(18,140,126,.15)}
+.connect-card.wa-support:hover .connect-btn{background:var(--green2);border-color:var(--green2)}
+.connect-card.ig:hover{border-color:rgba(225,48,108,.5);box-shadow:0 0 40px rgba(225,48,108,.15)}
+.connect-card.ig:hover .connect-btn{background:#E1306C;border-color:#E1306C}
+.connect-card.fb:hover{border-color:rgba(24,119,242,.5);box-shadow:0 0 40px rgba(24,119,242,.15)}
+.connect-card.fb:hover .connect-btn{background:#1877F2;border-color:#1877F2}
+.connect-card.email:hover{border-color:rgba(102,126,234,.5);box-shadow:0 0 40px rgba(102,126,234,.15)}
+.connect-card.email:hover .connect-btn{background:var(--purple1);border-color:var(--purple1)}
+@media(max-width:900px){.connect-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.connect-grid{grid-template-columns:1fr}}
+
+#testimonials{background:var(--bg)}
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.testimonial-card{padding:32px;position:relative}
+.testimonial-quote{
+position:absolute;top:16px;left:24px;font-size:60px;font-family:Georgia,serif;
+color:rgba(37,211,102,.2);line-height:1;
+}
+.testimonial-text{font-size:15px;color:var(--text);line-height:1.7;margin-bottom:20px;position:relative;z-index:1}
+.testimonial-author{display:flex;align-items:center;gap:12px}
+.testimonial-avatar{
+width:44px;height:44px;border-radius:50%;display:flex;align-items:center;
+justify-content:center;font-weight:700;font-size:16px;color:#fff;flex-shrink:0;
+}
+.testimonial-info{text-align:left}
+.testimonial-name{font-size:14px;font-weight:600;color:#fff}
+.testimonial-course{font-size:12px;color:var(--text-muted)}
+.testimonial-stars{color:#FFD700;font-size:13px;margin-top:4px}
+@media(max-width:768px){
+.testimonials-grid{grid-template-columns:1fr;overflow-x:auto;scroll-snap-type:x mandatory;display:flex;gap:16px;padding-bottom:16px}
+.testimonial-card{min-width:300px;scroll-snap-align:start;flex-shrink:0}
+}
+
+#faq{background:var(--bg)}
+.faq-list{max-width:700px;margin:0 auto}
+.faq-item{
+border:1px solid var(--border);border-radius:12px;margin-bottom:12px;
+overflow:hidden;background:var(--glass);backdrop-filter:blur(10px);
+}
+.faq-question{
+display:flex;justify-content:space-between;align-items:center;
+padding:20px 24px;cursor:pointer;font-weight:600;font-size:15px;color:#fff;transition:all .3s;
+}
+.faq-question:hover{color:var(--green1)}
+.faq-toggle{
+width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.05);
+display:flex;align-items:center;justify-content:center;
+font-size:18px;color:var(--green1);transition:transform .3s;flex-shrink:0;
+}
+.faq-item.active .faq-toggle{transform:rotate(45deg)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease}
+.faq-answer-inner{padding:0 24px 20px;font-size:14px;color:var(--text-muted);line-height:1.7}
+.faq-item.active .faq-answer{max-height:300px}
+
+#final-cta{
+padding:100px 0;text-align:center;position:relative;overflow:hidden;
+background:linear-gradient(135deg,rgba(37,211,102,.1),rgba(102,126,234,.1));
+}
+.cta-bg{
+position:absolute;top:0;left:0;right:0;bottom:0;
+background:linear-gradient(135deg,var(--green1),var(--purple1),var(--green2),var(--purple2));
+background-size:400% 400%;animation:gradient-shift 10s ease infinite;opacity:.08;
+}
+@keyframes gradient-shift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.cta-title{font-size:clamp(32px,4vw,52px);font-weight:800;color:#fff;margin-bottom:16px;position:relative;z-index:1}
+.cta-sub{font-size:18px;color:var(--text-muted);margin-bottom:40px;position:relative;z-index:1}
+.btn-cta-big{
+display:inline-flex;align-items:center;gap:10px;
+padding:16px 40px;border-radius:50px;font-size:18px;font-weight:700;
+background:linear-gradient(135deg,var(--green1),var(--green2));color:#fff;
+border:none;cursor:pointer;transition:all .3s;position:relative;z-index:1;
+font-family:'Poppins',sans-serif;animation:pulse-btn 2s infinite;
+}
+@keyframes pulse-btn{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.4)}50%{box-shadow:0 0 0 20px rgba(37,211,102,0)}}
+.btn-cta-big:hover{transform:scale(1.05);box-shadow:0 10px 40px rgba(37,211,102,.4)}
+.cta-socials{display:flex;gap:20px;justify-content:center;margin-top:32px;position:relative;z-index:1}
+.cta-socials a{
+width:48px;height:48px;border-radius:50%;display:flex;align-items:center;
+justify-content:center;font-size:20px;color:#888;
+border:1px solid var(--border);transition:all .3s;background:var(--glass);
+}
+.cta-socials a:hover{transform:scale(1.15)}
+
+footer{
+padding:60px 0 0;border-top:1px solid var(--border);
+background:rgba(0,0,0,.3);position:relative;
+}
+footer::before{
+content:'';position:absolute;top:0;left:20%;right:20%;height:1px;
+background:linear-gradient(90deg,transparent,var(--green1),transparent);
+}
+.footer-grid{
+display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px;
+max-width:1200px;margin:0 auto;padding:0 24px 40px;
+}
+.footer-logo{font-family:'Poppins',sans-serif;font-weight:800;font-size:24px;
+background:linear-gradient(135deg,var(--green1),var(--mint));-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;margin-bottom:12px}
+.footer-desc{font-size:14px;color:var(--text-muted);margin-bottom:16px;max-width:300px}
+.footer-socials{display:flex;gap:12px}
+.footer-socials a{
+width:36px;height:36px;border-radius:10px;display:flex;align-items:center;
+justify-content:center;font-size:16px;color:#888;border:1px solid var(--border);transition:all .3s;
+}
+.footer-socials a:hover{color:#fff;border-color:rgba(255,255,255,.3);transform:translateY(-2px)}
+.footer-heading{font-size:14px;font-weight:700;color:#fff;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-links li a{font-size:14px;color:var(--text-muted);transition:color .3s}
+.footer-links li a:hover{color:var(--green1)}
+.footer-bottom{border-top:1px solid var(--border);padding:20px 24px;text-align:center;font-size:13px;color:var(--text-muted)}
+@media(max-width:768px){.footer-grid{grid-template-columns:1fr;text-align:center}
+.footer-desc{margin:0 auto 16px}.footer-socials{justify-content:center}
+.footer-links{align-items:center}
+}
+
+.floating-wa{
+position:fixed;bottom:24px;right:24px;z-index:998;
+width:56px;height:56px;border-radius:50%;
+background:linear-gradient(135deg,var(--green1),var(--green2));
+display:flex;align-items:center;justify-content:center;
+font-size:28px;color:#fff;cursor:pointer;
+animation:pulse-green 2s infinite;
+transition:transform .3s;box-shadow:0 4px 20px rgba(37,211,102,.4);
+}
+.floating-wa:hover{transform:scale(1.1)}
+.floating-wa .wa-tooltip{
+position:absolute;right:68px;background:rgba(0,0,0,.9);color:#fff;
+padding:8px 16px;border-radius:8px;font-size:13px;white-space:nowrap;
+opacity:0;pointer-events:none;transition:all .3s;transform:translateX(8px);
+}
+.floating-wa:hover .wa-tooltip{opacity:1;transform:translateX(0)}
+
+.back-to-top{
+position:fixed;bottom:24px;left:24px;z-index:998;
+width:44px;height:44px;border-radius:50%;
+background:var(--glass);backdrop-filter:blur(10px);
+border:1px solid var(--border);
+display:flex;align-items:center;justify-content:center;
+font-size:18px;color:#fff;cursor:pointer;
+opacity:0;pointer-events:none;transition:all .3s;
+}
+.back-to-top.visible{opacity:1;pointer-events:all}
+.back-to-top:hover{background:rgba(255,255,255,.1);transform:translateY(-2px)}
+
+.floating-shapes{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.shape{position:absolute;border-radius:50%;opacity:.03;animation:float-shape 20s ease-in-out infinite}
+.shape:nth-child(1){width:400px;height:400px;background:var(--green1);top:10%;right:-100px;animation-delay:0s}
+.shape:nth-child(2){width:300px;height:300px;background:var(--purple1);bottom:20%;left:-80px;animation-delay:-7s}
+.shape:nth-child(3){width:200px;height:200px;background:var(--mint);top:60%;right:20%;animation-delay:-14s}
+@keyframes float-shape{
+0%,100%{transform:translate(0,0) rotate(0deg)}
+25%{transform:translate(30px,-30px) rotate(90deg)}
+50%{transform:translate(-20px,20px) rotate(180deg)}
+75%{transform:translate(20px,30px) rotate(270deg)}
+}
+</style>
+</head>
+<body>
+
+<div class="floating-shapes">
+<div class="shape"></div>
+<div class="shape"></div>
+<div class="shape"></div>
+</div>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 1. FIXED SOCIAL SIDEBAR (Desktop Only)  -->
+<!-- ═══════════════════════════════════════ -->
+<aside class="social-sidebar" aria-label="Social links">
+<!-- ★ REPLACE: WhatsApp Bot Link -->
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="wa-bot" aria-label="WhatsApp Bot">
+<svg class="icon-svg" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+<span class="tooltip">Chat with Yukshya</span>
+</a>
+<!-- ★ REPLACE: Instagram Link -->
+<a href="https://www.instagram.com/yukshyaboot?igsh=MW11MjRrOXJxMnZzNw==" target="_blank" class="ig" aria-label="Instagram">
+<svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+<span class="tooltip">Instagram</span>
+</a>
+<!-- ★ REPLACE: Facebook Link -->
+<a href="https://www.facebook.com/share/1FbhJ76A3Z/" target="_blank" class="fb" aria-label="Facebook">
+<svg class="icon-svg" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+<span class="tooltip">Facebook</span>
+</a>
+<a href="mailto:wtsappchatnotebook@gmail.com" class="em" aria-label="Email">
+<svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+<span class="tooltip">Email Us</span>
+</a>
+</aside>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 2. NAVBAR                               -->
+<!-- ═══════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+<div class="nav-inner">
+<a href="#" class="nav-logo"><span>🤖</span> Yukshya</a>
+<div class="nav-links">
+<a href="#features">Features</a>
+<a href="#how-it-works">How It Works</a>
+<a href="#pricing">Pricing</a>
+<a href="#faq">FAQ</a>
+<a href="#connect">Contact</a>
+</div>
+<div class="nav-right">
+<div class="nav-socials">
+<!-- ★ REPLACE: Instagram Link -->
+<a href="https://www.instagram.com/yukshyaboot?igsh=MW11MjRrOXJxMnZzNw==" target="_blank" aria-label="Instagram">
+<svg class="icon-svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+</a>
+<!-- ★ REPLACE: Facebook Link -->
+<a href="https://www.facebook.com/share/1FbhJ76A3Z/" target="_blank" aria-label="Facebook">
+<svg class="icon-svg" viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+</a>
+</div>
+<!-- ★ REPLACE: WhatsApp Bot Link -->
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="btn-cta" id="navCta">
+<svg style="width:16px;height:16px;fill:#fff" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+Start Free
+</a>
+</div>
+<div class="hamburger" id="hamburger" aria-label="Menu">
+<span></span><span></span><span></span>
+</div>
+</div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+<a href="#features" class="mobile-link">Features</a>
+<a href="#how-it-works" class="mobile-link">How It Works</a>
+<a href="#pricing" class="mobile-link">Pricing</a>
+<a href="#faq" class="mobile-link">FAQ</a>
+<a href="#connect" class="mobile-link">Contact</a>
+<!-- ★ REPLACE: WhatsApp Bot Link -->
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="btn-cta" style="margin-top:12px">Start Free Trial</a>
+<div class="mobile-socials">
+<!-- ★ REPLACE: Instagram Link -->
+<a href="https://www.instagram.com/yukshyaboot?igsh=MW11MjRrOXJxMnZzNw==" target="_blank">📸</a>
+<!-- ★ REPLACE: Facebook Link -->
+<a href="https://www.facebook.com/share/1FbhJ76A3Z/" target="_blank">📘</a>
+<a href="mailto:wtsappchatnotebook@gmail.com">📧</a>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 3. HERO SECTION                         -->
+<!-- ═══════════════════════════════════════ -->
+<section id="hero">
+<canvas id="particles-canvas"></canvas>
+<div class="hero-inner">
+<div class="hero-content">
+<div class="hero-badge">🚀 AI-Powered Study Assistant</div>
+<h1 class="hero-title">
+<span class="line1" id="typedText"></span><span class="typed-cursor" id="typedCursor">|</span><br>
+<span class="line2" id="typedText2"></span>
+</h1>
+<p class="hero-sub">Save files. Get them back instantly. Let AI explain your own notes — all inside WhatsApp. No app download needed.</p>
+<div class="hero-buttons">
+<!-- ★ REPLACE: WhatsApp Bot Link -->
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="btn-cta" style="padding:14px 32px;font-size:16px">
+<svg style="width:18px;height:18px;fill:#fff" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+Start Free Trial →
+</a>
+<a href="#how-it-works" class="btn-glass">▶ Watch How It Works</a>
+</div>
+<div class="hero-proof">
+<div class="avatar-group">
+<div class="avatar" style="background:#E1306C">A</div>
+<div class="avatar" style="background:#1877F2">R</div>
+<div class="avatar" style="background:#FFD700">S</div>
+<div class="avatar" style="background:var(--green1)">K</div>
+<div class="avatar" style="background:var(--purple1)">P</div>
+</div>
+<span class="hero-proof-text">📱 Join students already using Yukshya<br><span class="stars">★★★★★</span> Loved by students</span>
+</div>
+</div>
+<div class="phone-wrapper">
+<div class="phone-3d" id="phone3d">
+<div class="phone-frame">
+<div class="phone-notch"></div>
+<div class="phone-screen">
+<div class="wa-header">
+<div class="wa-avatar">🤖</div>
+<div>
+<div class="wa-name">Yukshya</div>
+<div class="wa-status">online</div>
+</div>
+</div>
+<div class="wa-chat" id="waChat">
+<div class="chat-msg sent" data-delay="500"><span class="file-icon">📄</span> physics_notes.pdf</div>
+<div class="chat-msg received" data-delay="1500">⏳ Checking your file...</div>
+<div class="chat-msg received" data-delay="3000">✅ Saved as <b>physics_ch1</b>!<br>Use: <i>send physics_ch1</i></div>
+<div class="chat-msg sent" data-delay="4500">explain physics_ch1</div>
+<div class="chat-msg received" data-delay="6000">📖 Here's a summary of your physics notes:<br><br>Newton's Laws describe the relationship between forces and motion...</div>
+<div class="chat-msg sent" data-delay="8000">ask physics_ch1: what is inertia?</div>
+<div class="chat-msg received" data-delay="9500">💡 Based on your notes, inertia is the tendency of an object to resist changes in motion...</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 4. STATS STRIP                          -->
+<!-- ═══════════════════════════════════════ -->
+<div class="stats-strip">
+<div class="stats-grid">
+<div class="stat-item reveal">
+<div class="stat-number" data-target="7" data-suffix=" Days">0</div>
+<div class="stat-label">Free Trial</div>
+</div>
+<div class="stat-item reveal">
+<div class="stat-number" data-target="19" data-suffix=" MB">0</div>
+<div class="stat-label">Max File Size</div>
+</div>
+<div class="stat-item reveal">
+<div class="stat-number" data-target="24" data-suffix="/7">0</div>
+<div class="stat-label">Always Available</div>
+</div>
+<div class="stat-item reveal">
+<div class="stat-number" data-target="5" data-suffix=" Months">0</div>
+<div class="stat-label">Per Payment</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 5. PROBLEM SECTION                      -->
+<!-- ═══════════════════════════════════════ -->
+<section id="problems">
+<div class="container text-center">
+<div class="section-badge reveal">The Problem</div>
+<h2 class="section-title reveal">Sound familiar?</h2>
+<p class="section-sub reveal">Every student faces this before exams</p>
+<div class="problems-grid">
+<div class="glass-card tilt-card problem-card reveal">
+<span class="problem-icon">📂</span>
+<p class="problem-text"> Multiple files </p>
+</div>
+<div class="glass-card tilt-card problem-card reveal">
+<span class="problem-icon">🔍</span>
+<p class="problem-text">Can't find files during exams</p>
+</div>
+<div class="glass-card tilt-card problem-card reveal">
+<span class="problem-icon">⏰</span>
+<p class="problem-text">No time to revice at end exam time</p>
+</div>
+</div>
+<div class="solution-card reveal">
+<span class="problem-icon">✅</span>
+<p class="problem-text">Yukshya solves all three. Inside WhatsApp.</p>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 6. HOW IT WORKS                         -->
+<!-- ═══════════════════════════════════════ -->
+<section id="how-it-works">
+<div class="container text-center">
+<div class="section-badge reveal">Simple Process</div>
+<h2 class="section-title reveal">How Yukshya Works</h2>
+<p class="section-sub reveal">Three simple steps to smarter studying</p>
+</div>
+<div class="container">
+<div class="steps-container">
+<!-- <div class="step-line"></div> -->
+<!--div class="step-line-fill" id="stepLineFill"></div-->
+<div class="step reveal-left">
+<div class="step-num">01</div>
+<div class="step-content">
+<span class="step-icon">📤</span>
+<h3 class="step-title">Send Your File</h3>
+<p class="step-desc">Send any PDF, image, or document to Yukshya on WhatsApp with a name. It's that simple — no signup forms, no downloads.</p>
+</div>
+<span class="step-bg-num">01</span>
+</div>
+<div class="step reveal-right">
+<div class="step-num">02</div>
+<div class="step-content">
+<span class="step-icon">🤖</span>
+<h3 class="step-title">AI Scans It</h3>
+<p class="step-desc">Yukshya verifies it's study material and saves it securely with your chosen name. Your file is instantly indexed and ready for retrieval.</p>
+</div>
+<span class="step-bg-num">02</span>
+</div>
+<div class="step reveal-left">
+<div class="step-num">03</div>
+<div class="step-content">
+<span class="step-icon">♾️</span>
+<h3 class="step-title">Access Forever</h3>
+<p class="step-desc">Get it back, ask questions, get AI explanations — anytime, any device, just WhatsApp. Your personal study library, always in your pocket.</p>
+</div>
+<span class="step-bg-num">03</span>
+</div>
+</div>
+<div class="text-center" style="margin-top:40px">
+<!-- ★ REPLACE: WhatsApp Bot Link -->
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="btn-cta" style="padding:14px 36px;font-size:16px">Try it now</a>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 7. FEATURES SECTION                     -->
+<!-- ═══════════════════════════════════════ -->
+<section id="features">
+<div class="container text-center">
+<div class="section-badge reveal">Powerful Features</div>
+<h2 class="section-title reveal">Everything a student needs</h2>
+<p class="section-sub reveal">Built specifically for how you actually study</p>
+<div class="features-grid">
+<div class="glass-card tilt-card feature-card reveal">
+<div class="feature-icon-wrap">📁</div>
+<h3 class="feature-title">Save Any File</h3>
+<p class="feature-desc">PDF, DOCX, PPTX, Excel, Images — up to 19MB each. Send it, name it, done.</p>
+</div>
+<div class="glass-card tilt-card feature-card reveal">
+<div class="feature-icon-wrap">⚡</div>
+<h3 class="feature-title">Instant Retrieval</h3>
+<p class="feature-desc">Type "send physics_ch1" and get your file back in seconds. No scrolling through chats.</p>
+</div>
+<div class="glass-card tilt-card feature-card reveal">
+<div class="feature-icon-wrap">🤖</div>
+<h3 class="feature-title">AI Explanations</h3>
+<p class="feature-desc">AI reads YOUR notes and explains concepts in simple language you can understand.</p>
+</div>
+<div class="glass-card tilt-card feature-card reveal">
+<div class="feature-icon-wrap">❓</div>
+<h3 class="feature-title">Ask Questions</h3>
+<p class="feature-desc">Ask anything from your specific file — AI answers directly from your content.</p>
+</div>
+<div class="glass-card tilt-card feature-card reveal">
+<div class="feature-icon-wrap">📊</div>
+<h3 class="feature-title">Weakness Tracker</h3>
+<p class="feature-desc">See which subjects you ask about most — focus where it matters before exams.</p>
+</div>
+<div class="glass-card tilt-card feature-card reveal">
+<div class="feature-icon-wrap">📧</div>
+<h3 class="feature-title">Email Backup</h3>
+<p class="feature-desc">Files auto-sent to your email if WhatsApp fails. Your notes are always safe.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 8. COMMANDS SHOWCASE                    -->
+<!-- ═══════════════════════════════════════ -->
+<section id="commands">
+<div class="container text-center">
+<div class="section-badge reveal">Easy Commands</div>
+<h2 class="section-title reveal">Simple commands. Powerful results.</h2>
+<p class="section-sub reveal">Just type in WhatsApp — Yukshya understands</p>
+<div class="terminal reveal">
+<div class="terminal-header">
+<div class="terminal-dot r"></div>
+<div class="terminal-dot y"></div>
+<div class="terminal-dot g"></div>
+<span class="terminal-title">yukshya-terminal</span>
+</div>
+<div class="terminal-body" id="terminalBody"></div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 9. PRICING SECTION                      -->
+<!-- ═══════════════════════════════════════ -->
+<section id="pricing">
+<div class="container text-center">
+<div class="section-badge reveal">Pricing</div>
+<h2 class="section-title reveal">Simple, honest pricing</h2>
+<p class="section-sub reveal">Start free. Pay only when you love it.</p>
+<div class="pricing-grid">
+<div class="pricing-card-wrap reveal">
+<div class="pricing-card">
+<div class="pricing-front">
+<div class="pricing-label" style="color:var(--green1)">Free Trial</div>
+<div class="pricing-price">7 Days</div>
+<div class="pricing-period">Full Access • No Credit Card</div>
+<ul class="pricing-features">
+<li>All features unlocked</li>
+<li>Save unlimited files</li>
+<li>AI explanations</li>
+<li>No commitment</li>
+</ul>
+<!-- ★ REPLACE: WhatsApp Bot Link -->
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="btn-cta">Start Now →</a>
+</div>
+<div class="pricing-back">
+<h3 style="color:var(--green1);margin-bottom:16px;font-size:18px">Free Trial Includes</h3>
+<ul class="pricing-features">
+<li>Save any file up to 19MB</li>
+<li>Instant file retrieval</li>
+<li>AI-powered explanations</li>
+<li>Ask questions from notes</li>
+<li>Weakness tracking</li>
+<li>Email backup</li>
+<li>All commands available</li>
+<li>Cancel anytime — no questions</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="pricing-card-wrap reveal">
+<div class="pricing-card">
+<div class="pricing-front" style="position:relative">
+<div class="popular-badge">⭐ MOST POPULAR</div>
+<div class="pricing-label" style="color:#FFD700">Early Bird</div>
+<div class="pricing-price">₹50</div>
+<div class="pricing-period">5 Months • First 50 Students</div>
+<ul class="pricing-features">
+<li>Everything in Free Trial</li>
+<li>Priority support</li>
+<li>Locked-in pricing forever</li>
+<li>Refer 1 friend = 1 month free</li>
+</ul>
+<div style="font-size:13px;color:var(--mint);margin-bottom:12px">Limited: <span id="earlyBirdCounter">47</span> spots left</div>
+<!-- ★ REPLACE: WhatsApp Bot Link -->
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="btn-cta" style="background:linear-gradient(135deg,#FFD700,#FFA500);color:#000">Grab This Deal →</a>
+</div>
+<div class="pricing-back">
+<h3 style="color:#FFD700;margin-bottom:16px;font-size:18px">Early Bird Perks</h3>
+<ul class="pricing-features">
+<li>All features — no limits</li>
+<li>5 full months of access</li>
+<li>₹50 instead of ₹150</li>
+<li>Only for first 50 users</li>
+<li>Refer 1 paying friend = 1 month FREE</li>
+<li>Automatic referral tracking</li>
+<li>Priority feature requests</li>
+<li>Renew at ₹150/5 months later</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="pricing-card-wrap reveal">
+<div class="pricing-card">
+<div class="pricing-front">
+<div class="pricing-label" style="color:var(--purple1)">Standard</div>
+<div class="pricing-price">₹150</div>
+<div class="pricing-period">5 Months • All Features</div>
+<ul class="pricing-features">
+<li>Everything included</li>
+<li>Full AI capabilities</li>
+<li>Unlimited saves</li>
+<li>Refer 1 paying friend = 1 month FREE</li>
+</ul>
+<!-- ★ REPLACE: WhatsApp Bot Link -->
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="btn-cta" style="background:linear-gradient(135deg,var(--purple1),var(--purple2))">Get Started →</a>
+</div>
+<div class="pricing-back">
+<h3 style="color:var(--purple1);margin-bottom:16px;font-size:18px">Standard Plan</h3>
+<ul class="pricing-features">
+<li>Save files up to 19MB</li>
+<li>AI explanations & Q&A</li>
+<li>Weakness tracking</li>
+<li>Email backup</li>
+<li>All commands</li>
+<li>Refer friends for free months</li>
+<li>Renew anytime at ₹150</li>
+<li>Full support included</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<p class="pricing-note reveal">No hidden charges. No refunds. Renew anytime at ₹150 for 5 months.</p>
+<div class="referral-box reveal">
+<p>🎁 <strong>Refer a friend who pays → You get 1 month FREE automatically.</strong> No action needed. The system tracks it for you.</p>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 10. CONNECT WITH US                     -->
+<!-- ═══════════════════════════════════════ -->
+<section id="connect">
+<div class="container text-center">
+<div class="section-badge reveal">Stay Connected</div>
+<h2 class="section-title reveal">Connect with Yukshya</h2>
+<p class="section-sub reveal">Find us everywhere</p>
+<div class="connect-grid">
+<!-- ★ REPLACE: WhatsApp Bot Link -->
+<div class="connect-card wa reveal">
+<span class="connect-icon">💬</span>
+<h3 class="connect-title">Chat with Yukshya</h3>
+<p class="connect-desc">Start your free trial directly</p>
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="connect-btn">Open WhatsApp →</a>
+</div>
+<!-- ★ REPLACE: WhatsApp Support Channel Link -->
+<div class="connect-card wa-support reveal">
+<span class="connect-icon">📢</span>
+<h3 class="connect-title">Support Channel</h3>
+<p class="connect-desc">Updates, tips and announcements</p>
+<a href="https://chat.whatsapp.com/K4f3cnDUDkg6jSKyasQa42" target="_blank" class="connect-btn">Join Channel →</a>
+</div>
+<!-- ★ REPLACE: Instagram Link -->
+<div class="connect-card ig reveal">
+<span class="connect-icon">📸</span>
+<h3 class="connect-title">Follow on Instagram</h3>
+<p class="connect-desc">Behind the scenes and student tips</p>
+<a href="https://www.instagram.com/yukshyaboot?igsh=MW11MjRrOXJxMnZzNw==" target="_blank" class="connect-btn">Follow Us →</a>
+</div>
+<!-- ★ REPLACE: Facebook Link -->
+<div class="connect-card fb reveal">
+<span class="connect-icon">👍</span>
+<h3 class="connect-title">Join Facebook Page</h3>
+<p class="connect-desc">Community and updates</p>
+<a href="https://www.facebook.com/share/1FbhJ76A3Z/" target="_blank" class="connect-btn">Like Page →</a>
+</div>
+<div class="connect-card email reveal">
+<span class="connect-icon">📧</span>
+<h3 class="connect-title">Email Support</h3>
+<p class="connect-desc">wtsappchatnotebook@gmail.com</p>
+<a href="mailto:wtsappchatnotebook@gmail.com" class="connect-btn">Send Email →</a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 11. TESTIMONIALS                        -->
+<!-- ═══════════════════════════════════════ -->
+<section id="testimonials">
+<div class="container text-center">
+<div class="section-badge reveal">Student Love</div>
+<h2 class="section-title reveal">What students say</h2>
+<p class="section-sub reveal">Real feedback from real students</p>
+<!-- REPLACE: Update testimonial content with real student reviews -->
+<div class="testimonials-grid">
+<div class="glass-card testimonial-card reveal">
+<span class="testimonial-quote">"</span>
+<p class="testimonial-text">I’m really impressed with this notes chatbot. It has exciting and useful features that make note-taking much easier and more organized. The system handles requests smoothly and responds quickly, which creates a great user experience. I also appreciate how clearly it explains things—its explanations are simple, helpful, and easy to understand. Overall, it feels reliable, smart, and genuinely useful for productivity. Great work on building such an effective tool!.</p>
+<div class="testimonial-author">
+<div class="testimonial-avatar" style="background:linear-gradient(135deg,#E1306C,#C13584)">PN</div>
+<div class="testimonial-info">
+<div class="testimonial-name">Prajwal N.</div>
+<div class="testimonial-course">B.Tech Bengalur , bengaluru Reva University</div>
+<div class="testimonial-stars">★★★★★</div>
+</div>
+</div>
+</div>
+<div class="glass-card testimonial-card reveal">
+<span class="testimonial-quote">"</span>
+<p class="testimonial-text">A useful and smart notes app! Having all messy notes in one chat makes it simple and organised, and the explanation feature is really helpful for quick understanding. For just ₹50 for 6 months, it's totally worth it. Great app for students...</p>
+<div class="testimonial-author">
+<div class="testimonial-avatar" style="background:linear-gradient(135deg,var(--green1),var(--green2))">RK</div>
+<div class="testimonial-info">
+<div class="testimonial-name">Rekha Y</div>
+<div class="testimonial-course">B. Com LLB(Hons) KSLU Hubballi</div>
+<div class="testimonial-stars">★★★★★</div>
+</div>
+</div>
+</div>
+<div class="glass-card testimonial-card reveal">
+<span class="testimonial-quote">"</span>
+<p class="testimonial-text">Feels less like storing notes and more like talking to them. Everything in one chat, and whenever something is unclear, it explains it right there. Smart and surprisingly affordable for ₹50 for 6 months.</p>
+<div class="testimonial-author">
+<div class="testimonial-avatar" style="background:linear-gradient(135deg,var(--purple1),var(--purple2))">RM</div>
+<div class="testimonial-info">
+<div class="testimonial-name">Rekta M.</div>
+<div class="testimonial-course">PUC MMDR PU College Haveri</div>
+<div class="testimonial-stars">★★★★★</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 12. FAQ SECTION                         -->
+<!-- ═══════════════════════════════════════ -->
+<section id="faq">
+<div class="container text-center">
+<div class="section-badge reveal">FAQ</div>
+<h2 class="section-title reveal">Got questions? We have answers.</h2>
+<p class="section-sub reveal">Everything you need to know about Yukshya</p>
+</div>
+<div class="container">
+<div class="faq-list">
+<div class="faq-item reveal">
+<div class="faq-question">
+<span>Is it really free to start?</span>
+<div class="faq-toggle">+</div>
+</div>
+<div class="faq-answer">
+<div class="faq-answer-inner">Yes! You get 7 days of full access — every feature, no limits, no credit card needed. Just message Yukshya on WhatsApp and your trial starts instantly. If you love it, upgrade for as low as ₹50.</div>
+</div>
+</div>
+<div class="faq-item reveal">
+<div class="faq-question">
+<span>What file types are supported?</span>
+<div class="faq-toggle">+</div>
+</div>
+<div class="faq-answer">
+<div class="faq-answer-inner">Yukshya supports PDF, DOCX, PPTX, Excel files, and images (JPG, PNG). Each file can be up to 19MB. If you send something unsupported, Yukshya will let you know and suggest alternatives.</div>
+</div>
+</div>
+<div class="faq-item reveal">
+<div class="faq-question">
+<span>Is my data safe and private?</span>
+<div class="faq-toggle">+</div>
+</div>
+<div class="faq-answer">
+<div class="faq-answer-inner">Absolutely. Your files are stored securely and only accessible by you through your WhatsApp number. We don't share, sell, or access your files. WhatsApp's end-to-end encryption protects your messages. Files are also backed up to your email for extra safety.</div>
+</div>
+</div>
+<div class="faq-item reveal">
+<div class="faq-question">
+<span>What if WhatsApp is slow or down?</span>
+<div class="faq-toggle">+</div>
+</div>
+<div class="faq-answer">
+<div class="faq-answer-inner">Yukshya automatically sends a backup of your files to your registered email, so even if WhatsApp has issues, your notes are safe. Once WhatsApp is back up, everything works as normal.</div>
+</div>
+</div>
+<div class="faq-item reveal">
+<div class="faq-question">
+<span>How does the AI work?</span>
+<div class="faq-toggle">+</div>
+</div>
+<div class="faq-answer">
+<div class="faq-answer-inner">When you use the "explain" or "ask" commands, Yukshya's AI reads the content of YOUR specific file and generates explanations based on what's actually in your notes. It's not generic internet answers — it's personalized to your study material.</div>
+</div>
+</div>
+<div class="faq-item reveal">
+<div class="faq-question">
+<span>How do I make payment?</span>
+<div class="faq-toggle">+</div>
+</div>
+<div class="faq-answer">
+<div class="faq-answer-inner">Simply type "pay" in your Yukshya chat and you'll receive a secure payment link. We accept UPI, cards, and net banking. After payment, your account is upgraded instantly — no waiting, no manual verification.</div>
+</div>
+</div>
+<div class="faq-item reveal">
+<div class="faq-question">
+<span>How does the referral system work?</span>
+<div class="faq-toggle">+</div>
+</div>
+<div class="faq-answer">
+<div class="faq-answer-inner">Type "refer" to get your unique referral code. Share it with friends. When a friend signs up and makes a payment using your code, you automatically get 1 month added to your plan — completely free. There's no limit to how many friends you can refer!</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 13. FINAL CTA SECTION                   -->
+<!-- ═══════════════════════════════════════ -->
+<section id="final-cta">
+<div class="cta-bg"></div>
+<div class="container text-center">
+<h2 class="cta-title reveal">Ready to study smarter?</h2>
+<p class="cta-sub reveal">7 days free. No app. Just WhatsApp.</p>
+<!-- ★ REPLACE: WhatsApp Bot Link -->
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="btn-cta-big reveal">💬 Start Free on WhatsApp →</a>
+<div class="cta-socials reveal">
+<!-- ★ REPLACE: Instagram Link -->
+<a href="https://www.instagram.com/yukshyaboot?igsh=MW11MjRrOXJxMnZzNw==" target="_blank" aria-label="Instagram">📸</a>
+<!-- ★ REPLACE: Facebook Link -->
+<a href="https://www.facebook.com/share/1FbhJ76A3Z/" target="_blank" aria-label="Facebook">👍</a>
+<!-- Admin WhatsApp -->
+<a href="https://wa.me/qr/GV2T4FQASI2KF1" target="_blank" aria-label="Admin WhatsApp">💬</a>
+<a href="mailto:wtsappchatnotebook@gmail.com" aria-label="Email">📧</a>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 14. FOOTER                              -->
+<!-- ═══════════════════════════════════════ -->
+<footer>
+<div class="footer-grid">
+<div>
+<div class="footer-logo">🤖 Yukshya</div>
+<p class="footer-desc">Your AI-powered study assistant on WhatsApp. Save files, get explanations, and ace your exams — all in one chat.</p>
+<div class="footer-socials">
+<!-- ★ REPLACE: WhatsApp Bot Link -->
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" aria-label="WhatsApp">💬</a>
+<!-- ★ REPLACE: Instagram Link -->
+<a href="https://www.instagram.com/yukshyaboot?igsh=MW11MjRrOXJxMnZzNw==" target="_blank" aria-label="Instagram">📸</a>
+<!-- ★ REPLACE: Facebook Link -->
+<a href="https://www.facebook.com/share/1FbhJ76A3Z/" target="_blank" aria-label="Facebook">👍</a>
+<a href="mailto:wtsappchatnotebook@gmail.com" aria-label="Email">📧</a>
+</div>
+</div>
+<div>
+<div class="footer-heading">Quick Links</div>
+<ul class="footer-links">
+<li><a href="#features">Features</a></li>
+<li><a href="#how-it-works">How It Works</a></li>
+<li><a href="#pricing">Pricing</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#connect">Support</a></li>
+</ul>
+</div>
+<div>
+<div class="footer-heading">Contact</div>
+<ul class="footer-links">
+<li><a href="mailto:wtsappchatnotebook@gmail.com">📧 wtsappchatnotebook@gmail.com</a></li>
+<li><a href="https://wa.me/qr/GV2T4FQASI2KF1" target="_blank">💬 Admin WhatsApp</a></li>
+<!-- ★ REPLACE: WhatsApp Support Channel Link -->
+<li><a href="https://chat.whatsapp.com/K4f3cnDUDkg6jSKyasQa42" target="_blank">📱 Support Channel</a></li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom">
+© 2026 Yukshya. Made with ❤️ for students.
+</div>
+</footer>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 15. FLOATING ELEMENTS                   -->
+<!-- ═══════════════════════════════════════ -->
+<!-- ★ REPLACE: WhatsApp Bot Link -->
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="floating-wa" aria-label="Chat with Yukshya">
+💬
+<span class="wa-tooltip">Chat with Yukshya</span>
+</a>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+<script>
+const cursorDot=document.getElementById('cursorDot');
+const cursorRing=document.getElementById('cursorRing');
+let mouseX=0,mouseY=0,ringX=0,ringY=0;
+document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;cursorDot.style.left=mouseX+'px';cursorDot.style.top=mouseY+'px'});
+function animateCursor(){ringX+=(mouseX-ringX)*.15;ringY+=(mouseY-ringY)*.15;cursorRing.style.left=ringX+'px';cursorRing.style.top=ringY+'px';requestAnimationFrame(animateCursor)}
+animateCursor();
+
+const navbar=document.getElementById('navbar');
+const backToTop=document.getElementById('backToTop');
+window.addEventListener('scroll',()=>{
+if(window.scrollY>50)navbar.classList.add('scrolled');else navbar.classList.remove('scrolled');
+if(window.scrollY>300)backToTop.classList.add('visible');else backToTop.classList.remove('visible');
+});
+backToTop.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'})});
+
+const hamburger=document.getElementById('hamburger');
+const mobileMenu=document.getElementById('mobileMenu');
+hamburger.addEventListener('click',()=>{
+hamburger.classList.toggle('active');mobileMenu.classList.toggle('active');
+document.body.style.overflow=mobileMenu.classList.contains('active')?'hidden':'';
+});
+document.querySelectorAll('.mobile-link').forEach(link=>{
+link.addEventListener('click',()=>{hamburger.classList.remove('active');mobileMenu.classList.remove('active');document.body.style.overflow=''});
+});
+
+document.querySelectorAll('.btn-cta,.btn-cta-big').forEach(btn=>{
+btn.addEventListener('click',function(e){
+const ripple=document.createElement('span');ripple.classList.add('ripple');
+const rect=this.getBoundingClientRect();const size=Math.max(rect.width,rect.height);
+ripple.style.width=ripple.style.height=size+'px';
+ripple.style.left=(e.clientX-rect.left-size/2)+'px';
+ripple.style.top=(e.clientY-rect.top-size/2)+'px';
+this.appendChild(ripple);setTimeout(()=>ripple.remove(),600);
+});
+});
+
+const line1Text="Your Notes. Your AI.";
+const line2Text="On WhatsApp.";
+const typedEl=document.getElementById('typedText');
+const typedEl2=document.getElementById('typedText2');
+const typedCursor=document.getElementById('typedCursor');
+let i=0,j=0;
+function typeLine1(){if(i<line1Text.length){typedEl.textContent+=line1Text.charAt(i);i++;setTimeout(typeLine1,60)}else setTimeout(typeLine2,400)}
+function typeLine2(){if(j<line2Text.length){typedEl2.textContent+=line2Text.charAt(j);j++;setTimeout(typeLine2,60)}else typedCursor.style.display='none'}
+setTimeout(typeLine1,800);
+
+(function(){
+const canvas=document.getElementById('particles-canvas');
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+const particleCount=window.innerWidth<768?60:150;
+const positions=new Float32Array(particleCount*3);
+const colors=new Float32Array(particleCount*3);
+const velocities=[];
+const greenCol=new THREE.Color(0x25D366);
+const purpleCol=new THREE.Color(0x667eea);
+const mintCol=new THREE.Color(0x00F5A0);
+for(let p=0;p<particleCount;p++){
+positions[p*3]=(Math.random()-.5)*20;positions[p*3+1]=(Math.random()-.5)*20;positions[p*3+2]=(Math.random()-.5)*10;
+velocities.push({x:(Math.random()-.5)*.005,y:(Math.random()-.5)*.005,z:(Math.random()-.5)*.002});
+const col=[greenCol,purpleCol,mintCol][Math.floor(Math.random()*3)];
+colors[p*3]=col.r;colors[p*3+1]=col.g;colors[p*3+2]=col.b;
+}
+const geometry=new THREE.BufferGeometry();
+geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
+geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));
+const material=new THREE.PointsMaterial({size:.06,vertexColors:true,transparent:true,opacity:.8,sizeAttenuation:true});
+const points=new THREE.Points(geometry,material);scene.add(points);
+const lineGeometry=new THREE.BufferGeometry();
+const linePositions=new Float32Array(particleCount*particleCount*6);
+const lineMaterial=new THREE.LineBasicMaterial({color:0x25D366,transparent:true,opacity:.06});
+const lines=new THREE.LineSegments(lineGeometry,lineMaterial);scene.add(lines);
+camera.position.z=8;
+let pmouseX=0,pmouseY=0;
+document.addEventListener('mousemove',e=>{pmouseX=(e.clientX/window.innerWidth)*2-1;pmouseY=-(e.clientY/window.innerHeight)*2+1});
+function animateParticles(){
+requestAnimationFrame(animateParticles);
+const pos=geometry.attributes.position.array;
+for(let p=0;p<particleCount;p++){
+pos[p*3]+=velocities[p].x;pos[p*3+1]+=velocities[p].y;pos[p*3+2]+=velocities[p].z;
+if(Math.abs(pos[p*3])>10)velocities[p].x*=-1;
+if(Math.abs(pos[p*3+1])>10)velocities[p].y*=-1;
+if(Math.abs(pos[p*3+2])>5)velocities[p].z*=-1;
+const dx=pos[p*3]-pmouseX*5;const dy=pos[p*3+1]-pmouseY*5;
+const dist=Math.sqrt(dx*dx+dy*dy);
+if(dist<2){pos[p*3]+=dx*.01;pos[p*3+1]+=dy*.01}
+}
+geometry.attributes.position.needsUpdate=true;
+let lineIdx=0;const maxDist=2.5;
+for(let a=0;a<particleCount;a++){
+for(let b=a+1;b<particleCount;b++){
+const dx=pos[a*3]-pos[b*3],dy=pos[a*3+1]-pos[b*3+1],dz=pos[a*3+2]-pos[b*3+2];
+const dist=Math.sqrt(dx*dx+dy*dy+dz*dz);
+if(dist<maxDist&&lineIdx<linePositions.length-6){
+linePositions[lineIdx++]=pos[a*3];linePositions[lineIdx++]=pos[a*3+1];linePositions[lineIdx++]=pos[a*3+2];
+linePositions[lineIdx++]=pos[b*3];linePositions[lineIdx++]=pos[b*3+1];linePositions[lineIdx++]=pos[b*3+2];
+}}}
+lineGeometry.setAttribute('position',new THREE.BufferAttribute(linePositions.slice(0,lineIdx),3));
+lineGeometry.attributes.position.needsUpdate=true;lineGeometry.setDrawRange(0,lineIdx/3);
+points.rotation.y+=.0003;renderer.render(scene,camera);
+}
+animateParticles();
+window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight)});
+})();
+
+function animateChat(){
+const msgs=document.querySelectorAll('#waChat .chat-msg');
+msgs.forEach(msg=>msg.classList.remove('visible'));
+msgs.forEach((msg,idx)=>{const delay=parseInt(msg.getAttribute('data-delay'))||idx*1500;setTimeout(()=>msg.classList.add('visible'),delay)});
+setTimeout(()=>{msgs.forEach(msg=>msg.classList.remove('visible'));setTimeout(animateChat,500)},12000);
+}
+setTimeout(animateChat,1500);
+
+const phone3d=document.getElementById('phone3d');
+document.addEventListener('mousemove',e=>{
+if(window.innerWidth<768)return;
+const x=(e.clientX/window.innerWidth-.5)*10;const y=(e.clientY/window.innerHeight-.5)*10;
+phone3d.style.transform=`translateY(${Math.sin(Date.now()/1000)*10}px) rotateY(${x}deg) rotateX(${-y}deg)`;
+});
+
+const observerOptions={threshold:0.1,rootMargin:'0px 0px -50px 0px'};
+const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('visible')})},observerOptions);
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>observer.observe(el));
+
+let countersAnimated=false;
+const counterObserver=new IntersectionObserver(entries=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting&&!countersAnimated){
+countersAnimated=true;
+document.querySelectorAll('.stat-number').forEach(el=>{
+const target=parseInt(el.getAttribute('data-target'));const suffix=el.getAttribute('data-suffix')||'';
+let current=0;const increment=target/40;
+const timer=setInterval(()=>{current+=increment;if(current>=target){current=target;clearInterval(timer)}el.textContent=Math.floor(current)+suffix},40);
+});}});
+},{threshold:0.5});
+document.querySelectorAll('.stats-strip').forEach(el=>counterObserver.observe(el));
+
+document.querySelectorAll('.tilt-card').forEach(card=>{
+card.addEventListener('mousemove',e=>{
+if(window.innerWidth<768)return;
+const rect=card.getBoundingClientRect();const x=e.clientX-rect.left;const y=e.clientY-rect.top;
+const centerX=rect.width/2;const centerY=rect.height/2;
+const rotateX=(y-centerY)/centerY*-8;const rotateY=(x-centerX)/centerX*8;
+card.style.transform=`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+});
+card.addEventListener('mouseleave',()=>{card.style.transform='perspective(1000px) rotateX(0) rotateY(0) translateY(0)'});
+});
+
+const terminalCommands=[
+{cmd:'save physics_ch1',result:'File saved ✅'},
+{cmd:'send physics_ch1',result:'File sent 📎'},
+{cmd:'explain physics_ch1',result:'AI summary 📖'},
+{cmd:"ask physics_ch1: what is Newton's law?",result:'Answer 💡'},
+{cmd:'list',result:'All your files 📂'},
+{cmd:'weak',result:'Study analysis 📊'},
+{cmd:'refer',result:'Get referral code 🎁'},
+{cmd:'pay',result:'Payment link 💳'},
+{cmd:'support',result:'Get help 🆘'},
+];
+const terminalBody=document.getElementById('terminalBody');
+let terminalInView=false;
+const terminalObserver=new IntersectionObserver(entries=>{
+entries.forEach(entry=>{if(entry.isIntersecting&&!terminalInView){terminalInView=true;runTerminalAnimation()}});
+},{threshold:0.3});
+terminalObserver.observe(terminalBody);
+function runTerminalAnimation(){
+terminalBody.innerHTML='';let lineIndex=0;
+function addLine(){
+if(lineIndex>=terminalCommands.length){
+setTimeout(()=>{terminalInView=false;terminalBody.innerHTML='';
+setTimeout(()=>{terminalInView=true;lineIndex=0;addLine()},500)},3000);return;
+}
+const cmd=terminalCommands[lineIndex];
+const lineEl=document.createElement('div');lineEl.classList.add('terminal-line');
+lineEl.innerHTML=`<span class="cmd">$ ${cmd.cmd}</span> <span class="arrow">→</span> <span class="result">${cmd.result}</span>`;
+terminalBody.appendChild(lineEl);
+setTimeout(()=>{lineEl.classList.add('visible');lineIndex++;setTimeout(addLine,400)},50);
+}
+addLine();
+}
+
+const stepLineFill=document.getElementById('stepLineFill');
+const howItWorksSection=document.getElementById('how-it-works');
+const stepObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)stepLineFill.style.height='100%'})},{threshold:0.2});
+stepObserver.observe(howItWorksSection);
+
+document.querySelectorAll('.faq-question').forEach(question=>{
+question.addEventListener('click',()=>{
+const item=question.parentElement;const isActive=item.classList.contains('active');
+document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('active'));
+if(!isActive)item.classList.add('active');
+});
+});
+
+(function(){
+const counterEl=document.getElementById('earlyBirdCounter');
+let count=localStorage.getItem('yukshya_earlybird');
+if(count===null)count=47;else count=parseInt(count);
+const visited=localStorage.getItem('yukshya_visited');
+if(!visited){count=Math.max(23,count-1);localStorage.setItem('yukshya_visited','true');localStorage.setItem('yukshya_earlybird',count)}
+counterEl.textContent=count;
+})();
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor=>{
+anchor.addEventListener('click',function(e){
+e.preventDefault();const target=document.querySelector(this.getAttribute('href'));
+if(target){const offset=navbar.offsetHeight+10;const top=target.getBoundingClientRect().top+window.pageYOffset-offset;window.scrollTo({top,behavior:'smooth'})}
+});
+});
+
+if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>el.classList.add('visible'));
+}
+</script>
+</body>
+</html>
