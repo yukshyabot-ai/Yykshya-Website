@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yukshya Bot — On your WhatsApp</title>
 <meta name="description" content="Save files. Get AI explanations. Ask questions about your own notes — all inside WhatsApp. No app needed.">
- 
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
- 
+
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
- 
+
 :root{
   --bg-top:#A8C8E1;
   --bg-mid:#C5D4DD;
@@ -33,26 +33,26 @@
   --whatsapp-bubble-out:#005c4b;
   --whatsapp-bubble-in:#1f2c33;
   --whatsapp-chat-bg:#0b141a;
- 
+
   --glass-bg:rgba(255,255,255,0.45);
   --glass-bg-strong:rgba(255,255,255,0.65);
   --glass-border:rgba(255,255,255,0.7);
   --glass-highlight:linear-gradient(135deg,rgba(255,255,255,0.4) 0%,rgba(255,255,255,0.05) 50%,rgba(255,255,255,0.2) 100%);
- 
+
   --shadow-3d:
     inset 0 1px 0 rgba(255,255,255,0.7),
     inset 0 -1px 0 rgba(14,26,43,0.05),
     0 4px 8px rgba(14,26,43,0.04),
     0 12px 24px rgba(14,26,43,0.08),
     0 24px 48px rgba(14,26,43,0.12);
- 
+
   --paper-grain:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
- 
+
   --radius-sm:14px;
   --radius:24px;
   --radius-lg:32px;
 }
- 
+
 html{scroll-behavior:smooth}
 body{
   font-family:'Inter',sans-serif;
@@ -75,17 +75,17 @@ body::after{
     radial-gradient(ellipse at 20% 10%,rgba(255,255,255,0.4),transparent 50%),
     radial-gradient(ellipse at 80% 90%,rgba(224,120,86,0.15),transparent 50%);
 }
- 
+
 a{text-decoration:none;color:inherit}
 img{max-width:100%;display:block}
 .serif{font-family:'Fraunces',serif;font-feature-settings:"ss01","ss02"}
 .mono{font-family:'JetBrains Mono',monospace;font-feature-settings:"ss01"}
 .container{max-width:1280px;margin:0 auto;padding:0 24px;position:relative;z-index:2}
- 
+
 /* SVG icon defaults */
 .svg-icon{width:100%;height:100%;display:block}
 .icon-wrap-svg{display:flex;align-items:center;justify-content:center}
- 
+
 /* ════════ NAVBAR ════════ */
 .navbar{
   position:fixed;top:0;left:0;right:0;z-index:1000;
@@ -137,13 +137,13 @@ img{max-width:100%;display:block}
 .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
 .hamburger.active span:nth-child(2){opacity:0}
 .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
- 
+
 @media(max-width:900px){.nav-links{display:none}.hamburger{display:flex}}
 @media(max-width:480px){
   .nav-cta{padding:9px 16px;font-size:13px}
   .nav-logo{font-size:22px}
 }
- 
+
 .mobile-menu{
   position:fixed;inset:0;z-index:999;
   background:rgba(251,248,243,0.98);backdrop-filter:blur(30px);
@@ -152,19 +152,19 @@ img{max-width:100%;display:block}
 }
 .mobile-menu.active{opacity:1;pointer-events:all}
 .mobile-menu a{font-family:'Fraunces',serif;font-size:28px;font-weight:600;color:var(--ink)}
- 
+
 /* ════════ HERO ════════ */
 #hero{
   min-height:100vh;padding:140px 0 60px;
   display:flex;align-items:center;position:relative;
 }
- 
+
 .hero-grid{
   display:grid;grid-template-columns:repeat(12,1fr);
   grid-auto-rows:minmax(60px,auto);gap:20px;width:100%;
   perspective:2000px;
 }
- 
+
 .bento{
   background:var(--glass-bg);
   backdrop-filter:blur(20px) saturate(180%);
@@ -186,7 +186,7 @@ img{max-width:100%;display:block}
   background:var(--paper-grain);
   opacity:0.25;pointer-events:none;border-radius:inherit;
 }
- 
+
 /* Hero Headline */
 .hero-headline{
   grid-column:span 7;grid-row:span 5;
@@ -208,7 +208,7 @@ img{max-width:100%;display:block}
   border-radius:50%;pointer-events:none;
   filter:blur(40px);z-index:0;
 }
- 
+
 .brand-stack{position:relative;z-index:2;display:flex;flex-direction:column;gap:8px}
 .brand-name{
   font-family:'Fraunces',serif;
@@ -248,7 +248,7 @@ img{max-width:100%;display:block}
   color:var(--charcoal);letter-spacing:-0.01em;
 }
 .brand-tag .tag-text .em{color:var(--ink);font-style:normal;font-weight:600}
- 
+
 .brand-meta{
   margin-top:32px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
   position:relative;z-index:2;
@@ -265,7 +265,7 @@ img{max-width:100%;display:block}
   box-shadow:0 0 8px rgba(37,211,102,0.8);animation:pulse-dot 1.5s infinite;
 }
 .brand-meta-text{font-size:14px;color:var(--charcoal);font-weight:500}
- 
+
 /* Trust Badges */
 .hero-trust{
   grid-column:span 5;grid-row:span 5;
@@ -339,7 +339,7 @@ img{max-width:100%;display:block}
 .trust-text{flex:1;display:flex;flex-direction:column;min-width:0}
 .trust-text strong{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--ink)}
 .trust-text span{font-size:12px;color:var(--charcoal)}
- 
+
 /* 3D PHONE */
 .hero-phone-card{
   grid-column:span 7;grid-row:span 5;
@@ -354,7 +354,7 @@ img{max-width:100%;display:block}
   background:radial-gradient(circle,rgba(224,120,86,0.18) 0%,transparent 65%);
   border-radius:50%;pointer-events:none;filter:blur(40px);z-index:0;
 }
- 
+
 .phone-stage{
   flex-shrink:0;perspective:1500px;position:relative;
   filter:drop-shadow(0 30px 60px rgba(14,26,43,0.35));
@@ -453,7 +453,7 @@ img{max-width:100%;display:block}
 .phone-status .time{font-size:13px;letter-spacing:-0.02em}
 .phone-status .icons{display:flex;gap:5px;align-items:center;font-size:10px}
 .phone-status .icons svg{width:14px;height:10px;fill:#fff}
- 
+
 .wa-header{
   background:#1f2c34;padding:8px 12px;
   display:flex;align-items:center;gap:10px;
@@ -487,7 +487,7 @@ img{max-width:100%;display:block}
 .wa-contact .status{color:#8696a0;font-size:11px;font-weight:400}
 .wa-actions{display:flex;gap:14px;color:#aebac1;flex-shrink:0}
 .wa-actions svg{width:16px;height:16px;fill:#aebac1}
- 
+
 .wa-chat{
   flex:1;padding:12px 8px;
   display:flex;flex-direction:column;gap:6px;overflow:hidden;
@@ -525,12 +525,12 @@ img{max-width:100%;display:block}
 .wa-msg.file .fmeta{font-size:8px;color:rgba(255,255,255,0.6)}
 .wa-msg .check{color:#25D366;font-weight:700}
 .wa-msg .bold{font-weight:700}
- 
+
 .wa-msg:nth-child(1){animation-delay:0.5s}
 .wa-msg:nth-child(2){animation-delay:1.2s}
 .wa-msg:nth-child(3){animation-delay:1.9s}
 .wa-msg:nth-child(4){animation-delay:2.6s}
- 
+
 .wa-input{
   background:#1f2c34;padding:7px 8px;
   display:flex;align-items:center;gap:6px;
@@ -551,7 +551,7 @@ img{max-width:100%;display:block}
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),inset 0 -1px 0 rgba(0,0,0,0.15),0 2px 6px rgba(37,211,102,0.4);
 }
 .wa-input .send-btn svg{width:15px;height:15px;fill:#fff}
- 
+
 .phone-text{flex:1;display:flex;flex-direction:column;gap:18px;position:relative;z-index:2;min-width:0}
 .phone-text .label{
   font-family:'JetBrains Mono',monospace;
@@ -568,7 +568,7 @@ img{max-width:100%;display:block}
 }
 .phone-text h3 .em{font-style:italic;color:var(--copper-bright)}
 .phone-text p{font-size:15px;color:var(--charcoal);line-height:1.6;max-width:340px}
- 
+
 /* 4 Feature Pills */
 .hero-features{
   grid-column:span 5;grid-row:span 5;
@@ -605,7 +605,7 @@ img{max-width:100%;display:block}
 .feature-row .text{display:flex;flex-direction:column;min-width:0;flex:1}
 .feature-row .text strong{font-family:'Fraunces',serif;font-weight:600;font-size:15px;color:var(--ink)}
 .feature-row .text span{font-size:13px;color:var(--charcoal)}
- 
+
 /* ════════════════════════════════════════════ */
 /* RESPONSIVE — FIXED MOBILE BUG */
 /* ════════════════════════════════════════════ */
@@ -649,7 +649,7 @@ img{max-width:100%;display:block}
   .brand-tag .wa-icon-wrap svg{width:22px;height:22px}
   .brand-tag .tag-text{font-size:clamp(20px,5vw,28px)}
 }
- 
+
 /* ════════ COMMANDS BIG BOX ════════ */
 #commands{padding:80px 0 100px;position:relative}
 .section-eyebrow{
@@ -670,7 +670,7 @@ img{max-width:100%;display:block}
 .section-sub{font-size:17px;color:var(--charcoal);max-width:580px;margin-bottom:48px}
 .section-head{margin-bottom:48px;text-align:center}
 .section-head .section-sub{margin:0 auto 0}
- 
+
 .commands-box{
   background:var(--cream);
   border:1px solid rgba(255,255,255,0.8);
@@ -703,7 +703,7 @@ img{max-width:100%;display:block}
 }
 .meta-pill.copper{background:var(--copper-bright)}
 .meta-pill.sage{background:var(--sage-deep);color:var(--cream)}
- 
+
 .commands-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px;position:relative;z-index:2}
 .cmd-category{display:flex;flex-direction:column;gap:8px}
 .cmd-category h4{
@@ -723,7 +723,7 @@ img{max-width:100%;display:block}
 .cmd-category.ai h4 .cat-icon svg{fill:#FFD968}
 .cmd-category.payment h4 .cat-icon{background:linear-gradient(135deg,#9DBFA5,#7BA582)}
 .cmd-category.other h4 .cat-icon{background:linear-gradient(135deg,#F5B59A,#E8997A)}
- 
+
 .cmd-row{
   display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;
   padding:11px 14px;border-radius:10px;transition:background .25s;
@@ -732,7 +732,7 @@ img{max-width:100%;display:block}
 .cmd-name{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--ink)}
 .cmd-name .arg{color:var(--copper-bright);font-style:italic}
 .cmd-desc{font-size:12px;color:var(--charcoal);text-align:right;line-height:1.4}
- 
+
 .commands-footer{
   margin-top:36px;padding-top:24px;
   border-top:1px dashed rgba(14,26,43,0.15);
@@ -752,7 +752,7 @@ img{max-width:100%;display:block}
 }
 .commands-footer .copy-btn svg{width:14px;height:14px;fill:currentColor}
 .commands-footer .copy-btn:hover{background:var(--copper-bright);transform:translateY(-2px)}
- 
+
 @media(max-width:780px){
   .commands-box{padding:28px 20px}
   .commands-grid{grid-template-columns:1fr;gap:24px}
@@ -760,7 +760,7 @@ img{max-width:100%;display:block}
   .cmd-desc{text-align:left}
   .commands-header h3{font-size:24px}
 }
- 
+
 /* ════════ HOW IT WORKS ════════ */
 #how{padding:80px 0;position:relative}
 .how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
@@ -783,7 +783,57 @@ img{max-width:100%;display:block}
 .how-card p{font-size:14px;color:var(--charcoal);line-height:1.6}
 .how-card p em{font-family:'JetBrains Mono',monospace;font-style:normal;font-weight:600;color:var(--copper-bright);font-size:13px;background:rgba(224,120,86,0.1);padding:1px 6px;border-radius:6px}
 @media(max-width:780px){.how-grid{grid-template-columns:1fr}}
- 
+
+/* ════════ SECURITY / ENCRYPTION ════════ */
+#security{padding:80px 0;position:relative}
+.security-hero{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;background:linear-gradient(135deg,#1B2032 0%,#0E1A2B 50%,#08111E 100%);color:var(--cream);border-radius:var(--radius-lg);padding:56px 52px;position:relative;overflow:hidden;box-shadow:inset 0 2px 0 rgba(255,255,255,0.08),0 30px 80px rgba(14,26,43,0.4),0 60px 120px rgba(14,26,43,0.25)}
+.security-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 90% 10%,rgba(157,191,165,0.18),transparent 55%),radial-gradient(circle at 10% 90%,rgba(224,120,86,0.18),transparent 55%);pointer-events:none}
+.sec-left{position:relative;z-index:2;display:flex;flex-direction:column;gap:18px}
+.sec-tag{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.2em;color:#9DBFA5;font-weight:600;padding:6px 14px;border-radius:999px;background:rgba(157,191,165,0.12);border:1px solid rgba(157,191,165,0.3);align-self:flex-start}
+.sec-tag::before{content:'🔐';font-size:13px}
+.sec-left h3{font-family:'Fraunces',serif;font-size:clamp(28px,3.5vw,42px);font-weight:600;line-height:1.1;letter-spacing:-0.02em}
+.sec-left h3 .em{font-style:italic;color:var(--copper-bright)}
+.sec-left p{font-size:15px;color:rgba(251,248,243,0.78);line-height:1.7;max-width:520px}
+.sec-flow{display:flex;align-items:center;gap:12px;margin-top:18px;flex-wrap:wrap}
+.flow-step{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:88px}
+.flow-icon{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 4px 12px rgba(0,0,0,0.3)}
+.flow-icon svg{width:24px;height:24px;fill:#FBF8F3}
+.flow-step span{font-size:11px;color:rgba(251,248,243,0.65);text-align:center;font-weight:500}
+.flow-arrow{color:rgba(224,120,86,0.7);font-size:20px;font-weight:300}
+.sec-right{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:280px}
+.lock-stage{position:relative;width:240px;height:240px;display:flex;align-items:center;justify-content:center}
+.lock-ring{position:absolute;border-radius:50%;border:1.5px solid rgba(255,255,255,0.1);animation:lock-rotate 30s linear infinite}
+.lock-ring.outer{width:240px;height:240px;border-top-color:rgba(224,120,86,0.5);animation-duration:25s}
+.lock-ring.middle{width:180px;height:180px;border-right-color:rgba(157,191,165,0.5);animation-duration:18s;animation-direction:reverse}
+.lock-ring.inner{width:120px;height:120px;border-bottom-color:rgba(255,255,255,0.3);animation-duration:14s}
+@keyframes lock-rotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.lock-core{width:96px;height:96px;border-radius:24px;background:linear-gradient(135deg,#E07856,#C9745A);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 2px 0 rgba(255,255,255,0.3),inset 0 -2px 0 rgba(0,0,0,0.2),0 8px 24px rgba(224,120,86,0.45),0 0 60px rgba(224,120,86,0.3);position:relative;z-index:3;animation:lock-breathe 4s ease-in-out infinite}
+@keyframes lock-breathe{0%,100%{transform:scale(1);box-shadow:inset 0 2px 0 rgba(255,255,255,0.3),inset 0 -2px 0 rgba(0,0,0,0.2),0 8px 24px rgba(224,120,86,0.45),0 0 60px rgba(224,120,86,0.3)}50%{transform:scale(1.05);box-shadow:inset 0 2px 0 rgba(255,255,255,0.3),inset 0 -2px 0 rgba(0,0,0,0.2),0 12px 32px rgba(224,120,86,0.6),0 0 90px rgba(224,120,86,0.5)}}
+.lock-core svg{width:52px;height:52px;fill:#FBF8F3;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))}
+.lock-chips{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.lock-chips span{position:absolute;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.15em;color:rgba(251,248,243,0.5);padding:4px 10px;border-radius:999px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08)}
+.lock-chips span:nth-child(1){top:0;left:50%;transform:translateX(-50%)}
+.lock-chips span:nth-child(2){right:0;top:50%;transform:translateY(-50%)}
+.lock-chips span:nth-child(3){bottom:0;left:50%;transform:translateX(-50%)}
+.lock-chips span:nth-child(4){left:0;top:50%;transform:translateY(-50%)}
+.security-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:32px}
+.sec-card{padding:28px 24px;border-radius:var(--radius);background:rgba(255,255,255,0.55);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.7);transition:all .4s;box-shadow:inset 0 1px 0 rgba(255,255,255,0.6),0 4px 12px rgba(14,26,43,0.06),0 12px 30px rgba(14,26,43,0.1);display:flex;flex-direction:column;gap:10px}
+.sec-card:hover{transform:translateY(-6px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.6),0 20px 50px rgba(14,26,43,0.15)}
+.sec-card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),inset 0 -1px 0 rgba(0,0,0,0.12),0 4px 10px rgba(14,26,43,0.15)}
+.sec-card-icon svg{width:22px;height:22px;fill:#fff}
+.sec-card.copper .sec-card-icon{background:linear-gradient(135deg,#E07856,#C9745A)}
+.sec-card.sage .sec-card-icon{background:linear-gradient(135deg,#9DBFA5,#7BA582)}
+.sec-card.navy .sec-card-icon{background:linear-gradient(135deg,#1B2032,#0E1A2B)}
+.sec-card.wa .sec-card-icon{background:linear-gradient(135deg,#25D366,#128C7E)}
+.sec-card h4{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--ink);letter-spacing:-0.01em}
+.sec-card p{font-size:13px;color:var(--charcoal);line-height:1.55}
+.sec-card .chip{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:rgba(224,120,86,0.12);color:var(--copper-bright);align-self:flex-start;margin-top:6px}
+.security-strip{margin-top:24px;padding:20px 28px;background:rgba(157,191,165,0.18);border:1px solid rgba(157,191,165,0.4);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;text-align:center;font-size:14px;color:var(--charcoal);box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 8px 20px rgba(14,26,43,0.06)}
+.security-strip strong{color:var(--ink);font-weight:600;font-family:'Fraunces',serif;font-size:16px}
+.security-strip .chip-mono{font-family:'JetBrains Mono',monospace;background:var(--ink);color:var(--cream);padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:0.08em}
+@media(max-width:1000px){.security-hero{grid-template-columns:1fr;padding:44px 32px;gap:32px}.sec-right{min-height:240px}.security-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.security-hero{padding:36px 22px}.sec-flow{gap:8px}.flow-step{min-width:72px}.flow-icon{width:42px;height:42px}.flow-icon svg{width:20px;height:20px}.flow-step span{font-size:10px}.lock-stage{width:200px;height:200px}.lock-ring.outer{width:200px;height:200px}.lock-ring.middle{width:150px;height:150px}.lock-ring.inner{width:100px;height:100px}.lock-core{width:80px;height:80px}.lock-core svg{width:42px;height:42px}.security-grid{grid-template-columns:1fr;gap:14px}}
+
 /* ════════ PRICING ════════ */
 #pricing{padding:80px 0}
 .pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-bottom:32px;max-width:780px;margin-left:auto;margin-right:auto}
@@ -851,7 +901,7 @@ img{max-width:100%;display:block}
 .rules-box li em{font-family:'JetBrains Mono',monospace;font-style:normal;font-weight:600;color:var(--copper-bright);font-size:13px;background:rgba(224,120,86,0.1);padding:1px 6px;border-radius:6px}
 @media(max-width:600px){.rules-box{padding:24px 20px}}
 @media(max-width:900px){.pricing-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto 32px}}
- 
+
 /* ════════ CONNECT ════════ */
 #connect{padding:80px 0}
 .connect-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:48px}
@@ -882,7 +932,7 @@ img{max-width:100%;display:block}
 .connect-card p{font-size:13px;color:var(--charcoal)}
 .connect-card a{margin-top:6px;font-size:13px;font-weight:600;color:var(--copper-bright);display:inline-flex;align-items:center;gap:4px}
 .connect-card a:hover{color:var(--ink)}
- 
+
 /* ════════ FAQ ════════ */
 #faq{padding:80px 0}
 .faq-list{max-width:760px;margin:48px auto 0}
@@ -911,9 +961,9 @@ img{max-width:100%;display:block}
 .faq-item.active .faq-toggle{transform:rotate(45deg)}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1)}
 .faq-a-inner{padding:0 26px 22px;font-size:14px;color:var(--charcoal);line-height:1.7}
-.faq-item.active .faq-a{max-height:300px}
+.faq-item.active .faq-a{max-height:340px}
 @media(max-width:600px){.faq-q{padding:18px 20px;font-size:15px}.faq-a-inner{padding:0 20px 18px}}
- 
+
 /* ════════ FINAL CTA ════════ */
 #final{padding:100px 0;text-align:center;position:relative}
 .final-card{
@@ -940,7 +990,7 @@ img{max-width:100%;display:block}
 .final-cta-btn svg{width:18px;height:18px;fill:#fff}
 .final-cta-btn:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(224,120,86,0.6),inset 0 1px 0 rgba(255,255,255,0.2)}
 @media(max-width:600px){.final-card{padding:48px 24px}.final-cta-btn{padding:14px 28px;font-size:14px}}
- 
+
 /* ════════ FOOTER ════════ */
 footer{padding:60px 0 30px;position:relative}
 .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(14,26,43,0.1)}
@@ -968,7 +1018,7 @@ footer{padding:60px 0 30px;position:relative}
 .footer-bottom{padding-top:24px;text-align:center;font-size:13px;color:var(--charcoal)}
 .footer-bottom .heart{color:var(--copper-bright)}
 @media(max-width:780px){.footer-grid{grid-template-columns:1fr;text-align:center}.footer-brand p{margin:0 auto 20px}.footer-socials{justify-content:center}}
- 
+
 /* ════════ FLOATING WHATSAPP ════════ */
 .float-wa{
   position:fixed;bottom:24px;right:24px;z-index:998;
@@ -985,7 +1035,7 @@ footer{padding:60px 0 30px;position:relative}
   50%{box-shadow:inset 0 2px 0 rgba(255,255,255,0.3),inset 0 -2px 0 rgba(0,0,0,0.2),0 8px 24px rgba(37,211,102,0.45),0 0 0 18px rgba(37,211,102,0)}
 }
 @media(max-width:600px){.float-wa{width:54px;height:54px;bottom:18px;right:18px}.float-wa svg{width:26px;height:26px}}
- 
+
 .reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
 .reveal.visible{opacity:1;transform:translateY(0)}
 @media(prefers-reduced-motion:reduce){
@@ -995,7 +1045,7 @@ footer{padding:60px 0 30px;position:relative}
 </style>
 </head>
 <body>
- 
+
 <!-- ═══ SVG ICON SPRITE ═══ -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -1075,9 +1125,25 @@ footer{padding:60px 0 30px;position:relative}
     <symbol id="i-pdf" viewBox="0 0 24 24">
       <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
     </symbol>
+    <!-- Security: padlock -->
+    <symbol id="i-lock" viewBox="0 0 24 24">
+      <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+    </symbol>
+    <!-- Security: key -->
+    <symbol id="i-key" viewBox="0 0 24 24">
+      <path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+    </symbol>
+    <!-- Security: cloud vault -->
+    <symbol id="i-cloud" viewBox="0 0 24 24">
+      <path d="M19.35 10.04A7.49 7.49 0 0012 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+    </symbol>
+    <!-- Security: eye-off (zero-knowledge) -->
+    <symbol id="i-eye-off" viewBox="0 0 24 24">
+      <path d="M12 6.5c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16c.57-.23 1.18-.36 1.83-.36zM2.71 3.16c-.39.39-.39 1.02 0 1.41l1.97 1.97A11.892 11.892 0 001 11.5C2.73 15.89 7 19 12 19c1.52 0 2.97-.3 4.31-.82l2.72 2.72c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L4.13 3.16c-.39-.39-1.03-.39-1.42 0zM12 16.5c-2.76 0-5-2.24-5-5 0-.77.18-1.5.49-2.14l1.57 1.57c-.03.18-.06.37-.06.57 0 1.66 1.34 3 3 3 .2 0 .38-.03.57-.07L14.14 16c-.65.32-1.37.5-2.14.5zm2.97-5.33a2.97 2.97 0 00-2.64-2.64l2.64 2.64z"/>
+    </symbol>
   </defs>
 </svg>
- 
+
 <!-- ═══════ NAVBAR ═══════ -->
 <nav class="navbar" id="navbar">
   <div class="nav-inner">
@@ -1086,36 +1152,38 @@ footer{padding:60px 0 30px;position:relative}
       <a href="#commands">Commands</a>
       <a href="#updates">Updates</a>
       <a href="#how">How it works</a>
+      <a href="#security">Security</a>
       <a href="#referral">Referral</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
     </div>
-    <a href="https://wa.me/917795431177?text=Hi" target="_blank" class="nav-cta">
+    <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="nav-cta">
       <svg><use href="#i-whatsapp"/></svg>
       Start Free Trial
     </a>
     <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
   </div>
 </nav>
- 
+
 <div class="mobile-menu" id="mobileMenu">
   <a href="#commands" class="m-link">Commands</a>
   <a href="#updates" class="m-link">Updates</a>
   <a href="#how" class="m-link">How it works</a>
+  <a href="#security" class="m-link">Security</a>
   <a href="#referral" class="m-link">Referral</a>
   <a href="#pricing" class="m-link">Pricing</a>
   <a href="#faq" class="m-link">FAQ</a>
-  <a href="https://wa.me/917795431177?text=Hi" target="_blank" class="nav-cta" style="margin-top:20px">
+  <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="nav-cta" style="margin-top:20px">
     <svg><use href="#i-whatsapp"/></svg>
     Start Free Trial
   </a>
 </div>
- 
+
 <!-- ═══════ HERO ═══════ -->
 <section id="hero">
   <div class="container">
     <div class="hero-grid">
- 
+
       <div class="bento hero-headline" id="heroHeadline">
         <div class="brand-stack">
           <div class="brand-name serif">Yukshya <span class="word-bot">Bot</span></div>
@@ -1131,7 +1199,7 @@ footer{padding:60px 0 30px;position:relative}
           <span class="brand-meta-text">No app · No login · Just chat</span>
         </div>
       </div>
- 
+
       <div class="bento hero-trust">
         <span class="trust-tag">
           <svg width="12" height="12" style="fill:currentColor"><use href="#i-check"/></svg>
@@ -1153,7 +1221,7 @@ footer{padding:60px 0 30px;position:relative}
           </div>
         </div>
       </div>
- 
+
       <div class="bento hero-phone-card">
         <div class="phone-stage">
           <div class="phone-3d" id="phone3d">
@@ -1162,7 +1230,7 @@ footer{padding:60px 0 30px;position:relative}
               <div class="phone-volume-buttons"><span></span><span></span></div>
               <div class="phone-bezel">
                 <div class="phone-screen">
- 
+
                   <div class="phone-status">
                     <span class="time">9:41</span>
                     <span class="icons">
@@ -1171,9 +1239,9 @@ footer{padding:60px 0 30px;position:relative}
                       <svg viewBox="0 0 24 12"><rect x="0" y="0" width="20" height="12" rx="2.5" fill="none" stroke="#fff" stroke-width="1"/><rect x="2" y="2" width="14" height="8" rx="1"/><rect x="20.5" y="4" width="2" height="4" rx="0.5"/></svg>
                     </span>
                   </div>
- 
+
                   <div class="phone-island"></div>
- 
+
                   <div class="wa-header">
                     <span class="back-arrow">‹</span>
                     <div class="wa-avatar">Y</div>
@@ -1186,7 +1254,7 @@ footer{padding:60px 0 30px;position:relative}
                       <svg><use href="#i-phone"/></svg>
                     </div>
                   </div>
- 
+
                   <div class="wa-chat">
                     <div class="wa-msg out file">
                       <div class="file-icon"><svg><use href="#i-file"/></svg></div>
@@ -1209,7 +1277,7 @@ footer{padding:60px 0 30px;position:relative}
                       <div class="time-row"><span class="time">9:39</span></div>
                     </div>
                   </div>
- 
+
                   <div class="wa-input">
                     <div class="input-pill">
                       <svg><use href="#i-smile"/></svg>
@@ -1217,7 +1285,7 @@ footer{padding:60px 0 30px;position:relative}
                     </div>
                     <div class="send-btn"><svg><use href="#i-mic"/></svg></div>
                   </div>
- 
+
                 </div>
               </div>
             </div>
@@ -1229,7 +1297,7 @@ footer{padding:60px 0 30px;position:relative}
           <p>This is the actual chat — no fake screenshots. Save your study material, then ask Yukshya about it. The AI reads your specific file, not Google.</p>
         </div>
       </div>
- 
+
       <div class="bento hero-features">
         <div class="feature-row">
           <div class="icon copper"><svg><use href="#i-folder"/></svg></div>
@@ -1248,11 +1316,11 @@ footer{padding:60px 0 30px;position:relative}
           <div class="text"><strong>MAKE PDF</strong><span>photos → one PDF</span></div>
         </div>
       </div>
- 
+
     </div>
   </div>
 </section>
- 
+
 <!-- ═══════ COMMANDS ═══════ -->
 <section id="commands">
   <div class="container">
@@ -1261,7 +1329,7 @@ footer{padding:60px 0 30px;position:relative}
       <h2 class="section-title serif">Every command, <span class="italic">in one place.</span></h2>
       <p class="section-sub">Type any of these in your WhatsApp chat with Yukshya. That's it — no menus, no buttons.</p>
     </div>
- 
+
     <div class="commands-box reveal">
       <div class="commands-header">
         <h3 class="serif">Complete <span class="italic">command reference</span></h3>
@@ -1271,7 +1339,7 @@ footer{padding:60px 0 30px;position:relative}
           <span class="meta-pill sage">free to read</span>
         </div>
       </div>
- 
+
       <div class="commands-grid">
         <div class="cmd-category files">
           <h4 class="serif"><span class="cat-icon"><svg><use href="#i-folder"/></svg></span> Files</h4>
@@ -1305,7 +1373,7 @@ footer{padding:60px 0 30px;position:relative}
           <div class="cmd-row"><span class="cmd-name mono">help</span><span class="cmd-desc">Show command list anytime</span></div>
         </div>
       </div>
- 
+
       <div class="commands-footer">
         <div class="help"><strong>Need help?</strong> Direct support: <span class="num">+91 8792472747</span></div>
         <button class="copy-btn" id="copyBtn"><svg><use href="#i-copy"/></svg> Copy command list</button>
@@ -1313,7 +1381,7 @@ footer{padding:60px 0 30px;position:relative}
     </div>
   </div>
 </section>
- 
+
 <!-- ═══════ WHAT'S NEW ═══════ -->
 <section id="updates">
   <div class="container">
@@ -1338,7 +1406,7 @@ footer{padding:60px 0 30px;position:relative}
     </div>
   </div>
 </section>
- 
+
 <!-- ═══════ HOW IT WORKS ═══════ -->
 <section id="how">
   <div class="container">
@@ -1366,7 +1434,95 @@ footer{padding:60px 0 30px;position:relative}
     </div>
   </div>
 </section>
- 
+
+<!-- ═══════ SECURITY ═══════ -->
+<section id="security">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">// privacy &amp; security</span>
+      <h2 class="section-title serif">Built secure. <span class="italic">Stays secure.</span></h2>
+      <p class="section-sub">Your study notes belong to you. We engineered Yukshya so even our own systems can't read your files.</p>
+    </div>
+
+    <div class="security-hero reveal">
+      <div class="sec-left">
+        <span class="sec-tag">AES-256-GCM Encryption</span>
+        <h3 class="serif">Military-grade encryption <span class="em">on every single file.</span></h3>
+        <p>Every file you save is encrypted with <strong>AES-256-GCM</strong> — the same standard banks, governments, and password managers trust. Without your unique encryption key, the stored data is unreadable noise. Even a full database dump would reveal nothing.</p>
+        <div class="sec-flow">
+          <div class="flow-step">
+            <div class="flow-icon"><svg><use href="#i-file"/></svg></div>
+            <span>You send file</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-icon"><svg><use href="#i-lock"/></svg></div>
+            <span>Encrypted instantly</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-icon"><svg><use href="#i-cloud"/></svg></div>
+            <span>Secure cloud vault</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-icon"><svg><use href="#i-key"/></svg></div>
+            <span>Only you decrypt</span>
+          </div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <div class="lock-stage">
+          <div class="lock-ring outer"></div>
+          <div class="lock-ring middle"></div>
+          <div class="lock-ring inner"></div>
+          <div class="lock-core">
+            <svg><use href="#i-lock"/></svg>
+          </div>
+          <div class="lock-chips">
+            <span>AES</span>
+            <span>256</span>
+            <span>GCM</span>
+            <span>SHA-256</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="security-grid reveal">
+      <div class="sec-card copper">
+        <div class="sec-card-icon"><svg><use href="#i-key"/></svg></div>
+        <h4 class="serif">One-of-a-kind key</h4>
+        <p>Every user has their own private encryption namespace. Your files can only be unlocked from your own WhatsApp number.</p>
+        <span class="chip">Per-user isolated</span>
+      </div>
+      <div class="sec-card sage">
+        <div class="sec-card-icon"><svg><use href="#i-cloud"/></svg></div>
+        <h4 class="serif">Secure cloud vault</h4>
+        <p>Files live in a fortified cloud — encrypted at rest, isolated per session, with strict access controls and zero public exposure.</p>
+        <span class="chip">Encrypted-at-rest</span>
+      </div>
+      <div class="sec-card navy">
+        <div class="sec-card-icon"><svg><use href="#i-eye-off"/></svg></div>
+        <h4 class="serif">Even we can't read it</h4>
+        <p>Files are encrypted before they ever leave your chat. Our admin tools cannot view file contents — only metadata like file names.</p>
+        <span class="chip">Zero-knowledge storage</span>
+      </div>
+      <div class="sec-card wa">
+        <div class="sec-card-icon"><svg><use href="#i-whatsapp"/></svg></div>
+        <h4 class="serif">WhatsApp E2E in transit</h4>
+        <p>Messages from your phone to Yukshya are protected end-to-end by WhatsApp itself. Encryption layered on encryption.</p>
+        <span class="chip">E2E protected</span>
+      </div>
+    </div>
+
+    <div class="security-strip reveal">
+      <span class="chip-mono">🛡️ FORTRESS-GRADE</span>
+      <span><strong>Your files. Your key. Your control.</strong> &nbsp;If we disappeared tomorrow, our database would still be useless without your key.</span>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════ PRICING ═══════ -->
 <section id="pricing">
   <div class="container">
@@ -1384,7 +1540,7 @@ footer{padding:60px 0 30px;position:relative}
           <li>Every feature unlocked</li><li>Save unlimited files</li>
           <li>AI explanations &amp; Q&amp;A</li><li>No commitment</li>
         </ul>
-        <a href="https://wa.me/917795431177?text=Hi" target="_blank" class="pricing-cta">Start Free →</a>
+        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="pricing-cta">Start Free →</a>
       </div>
       <div class="pricing-card featured reveal">
         <div class="pricing-label">⭐ Full Access</div>
@@ -1392,18 +1548,18 @@ footer{padding:60px 0 30px;position:relative}
         <div class="pricing-period">4 months · All features</div>
         <ul class="pricing-features">
           <li>Everything in the free trial</li><li>Unlimited saves &amp; AI Q&amp;A</li>
-          <li>Photo → PDF &amp; subject categories</li><li>Refer 20 friends → 4 months free</li>
+          <li>Photo → PDF &amp; subject categories</li><li>Refer 5 friends → 4 months free</li>
         </ul>
-        <a href="https://wa.me/917795431177?text=Hi" target="_blank" class="pricing-cta">Get Yukshya →</a>
+        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="pricing-cta">Get Yukshya →</a>
       </div>
     </div>
     <div class="referral-box reveal">
-      🎁 <strong>Refer 20 friends who pay → You get 4 months FREE.</strong>
+      🎁 <strong>Refer 5 friends who pay → You get 4 months FREE.</strong>
       <br><span style="color:var(--charcoal);font-size:13px">Tracked automatically · No claim needed</span>
     </div>
   </div>
 </section>
- 
+
 <!-- ═══════ REFERRAL ═══════ -->
 <section id="referral">
   <div class="container">
@@ -1430,8 +1586,8 @@ footer{padding:60px 0 30px;position:relative}
       </div>
     </div>
     <div class="referral-box reveal" style="margin-top:32px">
-      🎁 <strong>20 paying friends = 4 months FREE.</strong>
-      <br><span style="color:var(--charcoal);font-size:13px">Added to your account automatically once 20 friends you referred have paid · No claim needed</span>
+      🎁 <strong>5 paying friends = 4 months FREE.</strong>
+      <br><span style="color:var(--charcoal);font-size:13px">Added to your account automatically once 5 friends you referred have paid · No claim needed</span>
     </div>
     <div class="rules-box reveal">
       <h4 class="serif">📋 Referral rules</h4>
@@ -1439,14 +1595,14 @@ footer{padding:60px 0 30px;position:relative}
         <li>Type <em>refer</em> in your chat with Yukshya to get your unique 6-character referral code.</li>
         <li>Your friend enters <em>ref YOURCODE</em> in their own chat with Yukshya to link their account to you.</li>
         <li>A referral only counts once that friend becomes a <strong>paying</strong> user on the ₹79 plan — free trials do not count.</li>
-        <li>When <strong>20 friends</strong> you referred have paid, you earn <strong>4 months free</strong>, added to your account automatically.</li>
+        <li>When <strong>5 friends</strong> you referred have paid, you earn <strong>4 months free</strong>, added to your account automatically.</li>
         <li>No forms and no claiming needed — your referral count is tracked for you.</li>
         <li>Referring yourself, or using fake or duplicate numbers, will not count.</li>
       </ol>
     </div>
   </div>
 </section>
- 
+
 <!-- ═══════ CONNECT ═══════ -->
 <section id="connect">
   <div class="container">
@@ -1460,7 +1616,7 @@ footer{padding:60px 0 30px;position:relative}
         <div class="connect-icon"><svg><use href="#i-whatsapp"/></svg></div>
         <h4 class="serif">Chat with bot</h4>
         <p>Start your free trial</p>
-        <a href="https://wa.me/917795431177?text=Hi" target="_blank">Open WhatsApp →</a>
+        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank">Open WhatsApp →</a>
       </div>
       <div class="connect-card sup reveal">
         <div class="connect-icon"><svg><use href="#i-megaphone"/></svg></div>
@@ -1489,7 +1645,7 @@ footer{padding:60px 0 30px;position:relative}
     </div>
   </div>
 </section>
- 
+
 <!-- ═══════ FAQ ═══════ -->
 <section id="faq">
   <div class="container">
@@ -1512,8 +1668,8 @@ footer{padding:60px 0 30px;position:relative}
         <div class="faq-a"><div class="faq-a-inner">Type "make pdf", then send your photos one at a time (up to 20). When you're done, send "done" and Yukshya combines them into a single PDF — automatically resized and compressed so the file stays small. Send "cancel" any time to stop.</div></div>
       </div>
       <div class="faq-item reveal">
-        <div class="faq-q">Is my data safe?<div class="faq-toggle">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">Files are stored securely and only accessible by you through your WhatsApp number. We don't share, sell, or read your files. WhatsApp's end-to-end encryption protects messages in transit.</div></div>
+        <div class="faq-q">Is my data really safe?<div class="faq-toggle">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Yes — and we've put real engineering into it. Every file you save is encrypted with AES-256-GCM (military-grade) before it ever reaches storage. Your files live in a secure cloud vault, isolated per user. We can't read your file contents — only the file names. On top of all that, WhatsApp's own end-to-end encryption protects messages in transit. Three layers, all working for you.</div></div>
       </div>
       <div class="faq-item reveal">
         <div class="faq-q">How does the AI work?<div class="faq-toggle">+</div></div>
@@ -1525,26 +1681,26 @@ footer{padding:60px 0 30px;position:relative}
       </div>
       <div class="faq-item reveal">
         <div class="faq-q">How does the referral system work?<div class="faq-toggle">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">Type "refer" to get your unique 6-character code. Share it — friends type "ref YOURCODE" in their own chat. When 20 friends use your code AND pay for the ₹79 plan, you automatically get 4 months free. Tracked for you, no claiming needed.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Type "refer" to get your unique 6-character code. Share it — friends type "ref YOURCODE" in their own chat. When 5 friends use your code AND pay for the ₹79 plan, you automatically get 4 months free. Tracked for you, no claiming needed.</div></div>
       </div>
     </div>
   </div>
 </section>
- 
+
 <!-- ═══════ FINAL CTA ═══════ -->
 <section id="final">
   <div class="container">
     <div class="final-card reveal">
       <h2 class="serif">Ready to study <span class="italic">smarter?</span></h2>
       <p>7 days free. No app. Just WhatsApp.</p>
-      <a href="https://wa.me/917795431177?text=Hi" target="_blank" class="final-cta-btn">
+      <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="final-cta-btn">
         <svg><use href="#i-whatsapp"/></svg>
         Start free on WhatsApp →
       </a>
     </div>
   </div>
 </section>
- 
+
 <!-- ═══════ FOOTER ═══════ -->
 <footer>
   <div class="container">
@@ -1553,7 +1709,7 @@ footer{padding:60px 0 30px;position:relative}
         <div class="nav-logo serif">Yukshya<span class="dot"></span></div>
         <p>Your AI-powered study assistant on WhatsApp. Save files, get explanations, ace your exams — all in one chat.</p>
         <div class="footer-socials">
-          <a href="https://wa.me/917795431177?text=Hi" target="_blank" class="fs-wa" aria-label="WhatsApp"><svg><use href="#i-whatsapp"/></svg></a>
+          <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="fs-wa" aria-label="WhatsApp"><svg><use href="#i-whatsapp"/></svg></a>
           <a href="https://www.instagram.com/yukshyaboot?igsh=MW11MjRrOXJxMnZzNw==" target="_blank" class="fs-ig" aria-label="Instagram"><svg><use href="#i-instagram"/></svg></a>
           <a href="https://www.facebook.com/share/1FbhJ76A3Z/" target="_blank" class="fs-fb" aria-label="Facebook"><svg><use href="#i-facebook"/></svg></a>
           <a href="mailto:yukshyabot@gmail.com" class="fs-em" aria-label="Email"><svg><use href="#i-email"/></svg></a>
@@ -1563,8 +1719,9 @@ footer{padding:60px 0 30px;position:relative}
         <h5>Explore</h5>
         <ul>
           <li><a href="#commands">Commands</a></li><li><a href="#updates">Updates</a></li>
-          <li><a href="#how">How it works</a></li><li><a href="#referral">Referral</a></li>
-          <li><a href="#pricing">Pricing</a></li><li><a href="#faq">FAQ</a></li>
+          <li><a href="#how">How it works</a></li><li><a href="#security">Security</a></li>
+          <li><a href="#referral">Referral</a></li><li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -1576,21 +1733,21 @@ footer{padding:60px 0 30px;position:relative}
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 Yukshya · Built with <span class="heart"></span> by Tarun Mudhol · for fellow students</div>
+    <div class="footer-bottom">© 2026 Yukshya · Built with <span class="heart">❤</span> by a Reva student · for fellow students</div>
   </div>
 </footer>
- 
-<a href="https://wa.me/917795431177?text=Hi" target="_blank" class="float-wa" aria-label="WhatsApp">
+
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="float-wa" aria-label="WhatsApp">
   <svg><use href="#i-whatsapp"/></svg>
 </a>
- 
+
 <script>
 const nav = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
   if (window.scrollY > 50) nav.classList.add('scrolled');
   else nav.classList.remove('scrolled');
 });
- 
+
 const ham = document.getElementById('hamburger');
 const mob = document.getElementById('mobileMenu');
 ham.addEventListener('click', () => {
@@ -1605,7 +1762,7 @@ document.querySelectorAll('.m-link').forEach(l => {
     document.body.style.overflow = '';
   });
 });
- 
+
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
     const href = a.getAttribute('href');
@@ -1619,7 +1776,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     }
   });
 });
- 
+
 document.querySelectorAll('.faq-q').forEach(q => {
   q.addEventListener('click', () => {
     const item = q.parentElement;
@@ -1628,12 +1785,12 @@ document.querySelectorAll('.faq-q').forEach(q => {
     if (!wasActive) item.classList.add('active');
   });
 });
- 
+
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
- 
+
 const phone = document.getElementById('phone3d');
 if (phone && window.matchMedia('(min-width: 1000px)').matches) {
   const phoneCard = phone.closest('.hero-phone-card');
@@ -1649,7 +1806,7 @@ if (phone && window.matchMedia('(min-width: 1000px)').matches) {
     phone.style.transform = '';
   });
 }
- 
+
 const heroHeadline = document.getElementById('heroHeadline');
 if (heroHeadline && window.matchMedia('(min-width: 1000px)').matches) {
   heroHeadline.addEventListener('mousemove', e => {
@@ -1660,12 +1817,12 @@ if (heroHeadline && window.matchMedia('(min-width: 1000px)').matches) {
   });
   heroHeadline.addEventListener('mouseleave', () => { heroHeadline.style.transform = ''; });
 }
- 
+
 const copyBtn = document.getElementById('copyBtn');
 if (copyBtn) {
   copyBtn.addEventListener('click', async () => {
     const list = `YUKSHYA — COMMAND LIST
- 
+
 📁 FILES
 save <name>            — Save a file with a custom name
 send <name>            — Get a saved file back
@@ -1675,24 +1832,24 @@ make pdf               — Turn photos into one PDF
 delete <name>          — Remove a file permanently
 rename <old> <new>     — Change a file's name
 force save <name>      — Save when AI is busy verifying
- 
+
 💡 AI
 explain <name>         — AI summarises your file
 ask <name>: question   — Q&A from a specific file
 weak                   — See your most-asked topics
- 
+
 💳 PAYMENT
 pay                    — Razorpay link (auto)
 pay upi                — UPI ID for direct payment
 paid <txn_id>          — Submit UPI transaction ID
- 
+
 🎁 OTHER
 refer                  — Get your referral code
 ref <CODE>             — Apply a friend's code
 email <your@email>     — Register your email
 support                — Help, group link, contact
 help                   — Show command list anytime
- 
+
 Direct support: +91 8792472747`;
     try {
       await navigator.clipboard.writeText(list);
@@ -1710,6 +1867,6 @@ Direct support: +91 8792472747`;
   });
 }
 </script>
- 
+
 </body>
 </html>
