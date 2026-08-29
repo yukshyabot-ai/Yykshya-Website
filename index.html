@@ -849,6 +849,37 @@ img{max-width:100%;display:block}
 /* ════════ PRICING ════════ */
 #pricing{padding:80px 0}
 .pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-bottom:32px;max-width:780px;margin-left:auto;margin-right:auto}
+.pricing-grid-3{grid-template-columns:repeat(3,1fr);max-width:1080px}
+.trial-strip{
+  max-width:1080px;margin:0 auto 24px;padding:16px 24px;
+  border-radius:var(--radius);background:rgba(157,191,165,0.18);
+  border:1px solid rgba(157,191,165,0.4);
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  flex-wrap:wrap;text-align:center;font-size:14px;color:var(--charcoal);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 6px 16px rgba(14,26,43,0.05);
+}
+.trial-badge{
+  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;
+  letter-spacing:0.06em;padding:6px 14px;border-radius:999px;
+  background:var(--ink);color:var(--cream);white-space:nowrap;
+}
+.plan-note{
+  max-width:680px;margin:20px auto 0;text-align:center;
+  font-size:13.5px;color:var(--charcoal);line-height:1.6;
+}
+/* A thin colour bar is the only thing distinguishing the plans, because
+   the features really are identical — implying otherwise invites the
+   question "what do I get extra?" and the honest answer is nothing. */
+.pricing-card.plan-blue,.pricing-card.plan-gray,.pricing-card.plan-black{position:relative}
+.pricing-card.plan-blue::after,
+.pricing-card.plan-gray::after,
+.pricing-card.plan-black::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:5px;
+  border-radius:var(--radius) var(--radius) 0 0;
+}
+.pricing-card.plan-blue::after{background:linear-gradient(90deg,#5B8FC7,#A8C8E1)}
+.pricing-card.plan-gray::after{background:linear-gradient(90deg,#8C97A6,#C5D4DD)}
+.pricing-card.plan-black::after{background:linear-gradient(90deg,#0E1A2B,#3D4452)}
 .pricing-card{
   padding:40px 32px;border-radius:var(--radius);
   background:rgba(251,248,243,0.85);backdrop-filter:blur(20px);
@@ -912,6 +943,9 @@ img{max-width:100%;display:block}
 .rules-box li strong{color:var(--ink);font-weight:600}
 .rules-box li em{font-family:'JetBrains Mono',monospace;font-style:normal;font-weight:600;color:var(--copper-bright);font-size:13px;background:rgba(224,120,86,0.1);padding:1px 6px;border-radius:6px}
 @media(max-width:600px){.rules-box{padding:24px 20px}}
+@media(max-width:1000px){
+  .pricing-grid-3{grid-template-columns:1fr;max-width:400px}
+}
 @media(max-width:900px){.pricing-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto 32px}}
 
 /* ════════ CONNECT ════════ */
@@ -1151,6 +1185,9 @@ html,body{max-width:100%;overflow-x:hidden}
 
   /* ---- pricing ---- */
   .pricing-grid{gap:16px;margin-bottom:24px}
+  .trial-strip{padding:14px 16px;font-size:13px;gap:10px;border-radius:18px}
+  .trial-badge{font-size:11px;padding:5px 12px}
+  .plan-note{font-size:12.5px;margin-top:16px}
   .pricing-card{padding:30px 22px;border-radius:20px}
   .pricing-card:hover{transform:none}
   .pricing-price{font-size:52px}
@@ -1730,30 +1767,52 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="section-head reveal">
       <span class="section-eyebrow">// pricing</span>
       <h2 class="section-title serif">Honest <span class="italic">pricing.</span></h2>
-      <p class="section-sub">Start free. Pay only if you actually love it.</p>
+      <p class="section-sub">Three plans, same features. Pick how long you want — start free either way.</p>
     </div>
-    <div class="pricing-grid">
-      <div class="pricing-card reveal">
-        <div class="pricing-label">Free Trial</div>
-        <div class="pricing-price serif">7 days</div>
-        <div class="pricing-period">Full access · No card needed</div>
+    <div class="trial-strip reveal">
+      <span class="trial-badge">🎁 7 days free</span>
+      <span>Every feature unlocked. No card needed. Pick a plan only when the trial ends.</span>
+    </div>
+    <div class="pricing-grid pricing-grid-3">
+      <div class="pricing-card plan-blue reveal">
+        <div class="pricing-label">🔵 Blue Access · Seeker</div>
+        <div class="pricing-price serif">₹19</div>
+        <div class="pricing-period">30 days</div>
         <ul class="pricing-features">
-          <li>Every feature unlocked</li><li>Save unlimited files</li>
-          <li>AI explanations &amp; Q&amp;A</li><li>No commitment</li>
+          <li>Every feature, no limits</li>
+          <li>Unlimited saves &amp; AI Q&amp;A</li>
+          <li>Photo → PDF &amp; categories</li>
+          <li>Best for trying a full month</li>
         </ul>
-        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="pricing-cta">Start Free →</a>
+        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="pricing-cta">Start with Blue →</a>
       </div>
-      <div class="pricing-card featured reveal">
-        <div class="pricing-label">⭐ Full Access</div>
-        <div class="pricing-price serif">₹79</div>
-        <div class="pricing-period">4 months · All features</div>
+      <div class="pricing-card featured plan-gray reveal">
+        <div class="pricing-label">⚪ Gray Access · Scholar</div>
+        <div class="pricing-price serif">₹39</div>
+        <div class="pricing-period">90 days · a full semester</div>
         <ul class="pricing-features">
-          <li>Everything in the free trial</li><li>Unlimited saves &amp; AI Q&amp;A</li>
-          <li>Photo → PDF &amp; subject categories</li><li>Refer friends → up to 4 weeks free</li>
+          <li>Every feature, no limits</li>
+          <li>Unlimited saves &amp; AI Q&amp;A</li>
+          <li>Photo → PDF &amp; categories</li>
+          <li>Covers you through exams</li>
         </ul>
-        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="pricing-cta">Get Yukshya →</a>
+        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="pricing-cta">Get Gray →</a>
+      </div>
+      <div class="pricing-card plan-black reveal">
+        <div class="pricing-label">⚫ Black Access · Sage</div>
+        <div class="pricing-price serif">₹49</div>
+        <div class="pricing-period">120 days</div>
+        <ul class="pricing-features">
+          <li>Every feature, no limits</li>
+          <li>Unlimited saves &amp; AI Q&amp;A</li>
+          <li>Photo → PDF &amp; categories</li>
+          <li>Longest stretch, fewest renewals</li>
+        </ul>
+        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="pricing-cta">Get Black →</a>
       </div>
     </div>
+    <p class="plan-note reveal">Same features in every plan — only the duration
+    changes. Renew any time; new days are added to whatever you have left.</p>
     <div class="referral-box reveal">
       🎁 <strong>Every friend who pays = 1 free week for you.</strong>
       <br><span style="color:var(--charcoal);font-size:13px">Up to 4 friends · Added automatically as each one pays · No deadline</span>
@@ -1783,7 +1842,7 @@ html,body{max-width:100%;overflow-x:hidden}
       <div class="how-card reveal">
         <div class="how-num serif">03</div>
         <h4 class="serif">They pay, you get a week</h4>
-        <p>The moment a friend who used your code pays for the ₹79 plan, <em>1 free week</em> is added to your account. No forms, no waiting for the others.</p>
+        <p>The moment a friend who used your code pays for any plan, <em>1 free week</em> is added to your account. No forms, no waiting for the others.</p>
       </div>
     </div>
     <div class="referral-box reveal" style="margin-top:32px">
@@ -1795,7 +1854,7 @@ html,body{max-width:100%;overflow-x:hidden}
       <ol>
         <li>Type <em>refer</em> in your chat with Yukshya to get your unique 6-character referral code.</li>
         <li>Your friend enters <em>ref YOURCODE</em> in their own chat with Yukshya to link their account to you.</li>
-        <li>A referral only counts once that friend becomes a <strong>paying</strong> user on the ₹79 plan — free trials do not count.</li>
+        <li>A referral only counts once that friend becomes a <strong>paying</strong> user on any plan — free trials do not count.</li>
         <li>Each friend who pays earns you <strong>1 free week</strong> — added straight away, not held back until the others pay.</li>
         <li>You can refer up to <strong>4 friends</strong>, so the most you can earn is <strong>4 free weeks</strong>.</li>
         <li>There is <strong>no deadline</strong>. Your code stays active and weeks are added whenever a friend pays.</li>
@@ -1860,7 +1919,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="faq-list">
       <div class="faq-item reveal">
         <div class="faq-q">Is the free trial really free?<div class="faq-toggle">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">Yes. 7 days, every feature, no card needed. Just message Yukshya on WhatsApp and your trial begins. After 7 days, pay if you want to continue — or just stop.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Yes. 7 days, every feature, no card needed. Just message Yukshya on WhatsApp and your trial begins. After 7 days you pick a plan — from ₹19 — or just stop. Nothing is charged automatically.</div></div>
       </div>
       <div class="faq-item reveal">
         <div class="faq-q">What file types can I save?<div class="faq-toggle">+</div></div>
@@ -1880,11 +1939,15 @@ html,body{max-width:100%;overflow-x:hidden}
       </div>
       <div class="faq-item reveal">
         <div class="faq-q">How do I pay?<div class="faq-toggle">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">Type "pay" for an automatic Razorpay link (cards, UPI, netbanking). Or "pay upi" to pay our UPI ID directly and submit the transaction ID with "paid".</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Type "pay" and the bot shows the three plans — Blue ₹19 for 30 days, Gray ₹39 for 90 days, Black ₹49 for 120 days. Reply 1, 2 or 3 and you get a Razorpay link for that plan (cards, UPI, netbanking). Access unlocks automatically. Or send "pay upi" to pay our UPI ID directly and submit the transaction ID with "paid".</div></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">What's the difference between Blue, Gray and Black?<div class="faq-toggle">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Only how long they last. Every plan has exactly the same features — unlimited saves, AI explanations, photo to PDF, everything. Blue is ₹19 for 30 days, Gray is ₹39 for 90 days, and Black is ₹49 for 120 days. Longer plans work out cheaper per day. You can renew any time, and new days are added on top of whatever you have left — you never lose time by renewing early.</div></div>
       </div>
       <div class="faq-item reveal">
         <div class="faq-q">How does the referral system work?<div class="faq-toggle">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">Type "refer" to get your unique 6-character code. Share it — friends type "ref YOURCODE" in their own chat. Every friend who pays for the ₹79 plan earns you 1 free week, added to your account the moment they pay. You can refer up to 4 friends, so 4 free weeks in total. There is no deadline and nothing to claim.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Type "refer" to get your unique 6-character code. Share it — friends type "ref YOURCODE" in their own chat. Every friend who pays for any plan earns you 1 free week, added to your account the moment they pay. You can refer up to 4 friends, so 4 free weeks in total. There is no deadline and nothing to claim.</div></div>
       </div>
     </div>
   </div>
