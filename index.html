@@ -436,23 +436,6 @@ img{max-width:100%;display:block}
   border-radius:43px;overflow:hidden;
   display:flex;flex-direction:column;position:relative;
 }
-.phone-chat{
-  /* Fills the entire phone screen area. Sits ON TOP of the CSS-drawn chat
-     underneath, so if chat.jpg loads, that's what you see; if it fails to
-     load (missing file, slow network, wrong path), the CSS chat still
-     shows through underneath. Never a blank black screen. */
-  position:absolute;inset:0;
-  width:100%;height:100%;
-  object-fit:cover;object-position:top center;
-  border-radius:43px;
-  display:block;
-  background:var(--whatsapp-chat-bg);   /* matches screen bg while loading */
-  -webkit-user-drag:none;user-select:none;pointer-events:none;
-  z-index:20;
-  transition:opacity .3s ease;
-}
-/* If the image errors, JS toggles this to reveal the CSS chat as fallback. */
-.phone-chat.failed{opacity:0;pointer-events:none}
 .phone-screen::after{
   content:'';position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,0.06) 45%,rgba(255,255,255,0.12) 50%,rgba(255,255,255,0.06) 55%,transparent 70%);
@@ -653,34 +636,12 @@ img{max-width:100%;display:block}
   }
   .hero-headline,.hero-trust{min-height:auto;padding:48px 36px}
   .hero-phone-card{
-    display:flex !important;
-    flex-direction:column;
-    align-items:center;
-    text-align:center;
-    padding:50px 32px;min-height:auto;gap:36px;
-    /* Isolate: stops the tilted phone reaching outside its row and
-       painting over the text card that stacks below on this breakpoint. */
-    isolation:isolate;
-    overflow:hidden;
+    flex-direction:column;text-align:center;
+    padding:50px 32px;min-height:auto;gap:32px;
   }
-  /* Take the phone out of 3D on this breakpoint. The floor shadow and the
-     tilt were pushing content out of the flow when the card wraps. */
-  .phone-stage{width:100%;display:flex;justify-content:center;position:relative;z-index:1}
-  .phone-3d{
-    animation:none !important;
-    transform:none !important;
-    margin:0 auto;
-  }
-  .phone-floor-shadow{display:none}
-  .phone-text{
-    align-items:center;width:100%;
-    position:relative;z-index:2;
-    /* Guarantees the text sits BELOW the phone in the flex column, and
-       is fully clickable/selectable — this is what fixes the overlap. */
-    display:flex;flex-direction:column;gap:16px;
-  }
+  .phone-text{align-items:center;width:100%}
   .phone-text .label{align-self:center}
-  .hero-features{padding:28px;min-height:auto;position:relative;z-index:3}
+  .hero-features{padding:28px;min-height:auto}
 }
 @media(max-width:600px){
   #hero{padding:120px 0 40px}
@@ -906,87 +867,46 @@ img{max-width:100%;display:block}
   max-width:680px;margin:20px auto 0;text-align:center;
   font-size:13.5px;color:var(--charcoal);line-height:1.6;
 }
-/* Each plan owns its colour through the whole card, not just a thin bar
-   on top. The features are identical across plans — colour is the honest
-   way to tell them apart, without inviting the question "what do I get
-   extra?" when the answer would be nothing. Gray is the recommended
-   middle option and gets a copper ring plus a corner flag. */
+/* A thin colour bar is the only thing distinguishing the plans, because
+   the features really are identical — implying otherwise invites the
+   question "what do I get extra?" and the honest answer is nothing. */
+.pricing-card.plan-blue,.pricing-card.plan-gray,.pricing-card.plan-black{position:relative}
+.pricing-card.plan-blue::after,
+.pricing-card.plan-gray::after,
+.pricing-card.plan-black::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:5px;
+  border-radius:var(--radius) var(--radius) 0 0;
+}
+.pricing-card.plan-blue::after{background:linear-gradient(90deg,#5B8FC7,#A8C8E1)}
+.pricing-card.plan-gray::after{background:linear-gradient(90deg,#8C97A6,#C5D4DD)}
+.pricing-card.plan-black::after{background:linear-gradient(90deg,#0E1A2B,#3D4452)}
 .pricing-card{
   padding:40px 32px;border-radius:var(--radius);
+  background:rgba(251,248,243,0.85);backdrop-filter:blur(20px);
   border:1px solid rgba(255,255,255,0.7);
   transition:transform .4s,box-shadow .4s;
   position:relative;overflow:hidden;
-  display:flex;flex-direction:column;
-  box-shadow:
-    inset 0 2px 0 rgba(255,255,255,0.75),
-    0 6px 16px rgba(14,26,43,0.08),
-    0 20px 40px rgba(14,26,43,0.12);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,0.9),0 6px 16px rgba(14,26,43,0.08),0 20px 40px rgba(14,26,43,0.12);
 }
-.pricing-card::before{
+.pricing-card:hover{transform:translateY(-8px);box-shadow:0 30px 60px rgba(14,26,43,0.18),inset 0 2px 0 rgba(255,255,255,0.9)}
+.pricing-card.featured{
+  background:linear-gradient(180deg,#1B2032 0%,#0E1A2B 100%);
+  color:var(--cream);border-color:var(--copper-bright);
+}
+.pricing-card.featured::before{
   content:'';position:absolute;inset:0;
-  background:var(--paper-grain);opacity:0.28;
-  pointer-events:none;border-radius:inherit;
+  background:radial-gradient(ellipse at top right,rgba(224,120,86,0.4),transparent 60%);
+  pointer-events:none;
 }
-.pricing-card:hover{
-  transform:translateY(-8px);
-  box-shadow:0 30px 60px rgba(14,26,43,0.2),inset 0 2px 0 rgba(255,255,255,0.75);
-}
-
-/* BLUE — soft sky */
-.pricing-card.plan-blue{
-  background:linear-gradient(165deg,#DCEBF7 0%,#B9D5EA 55%,#A3C7E2 100%);
-}
-.pricing-card.plan-blue .pricing-label{color:#2F6699}
-.pricing-card.plan-blue .pricing-cta{background:#3C7CB8}
-.pricing-card.plan-blue .pricing-cta:hover{background:#2F6699}
-.pricing-card.plan-blue .pricing-features li::before{color:#3C7CB8}
-
-/* GRAY — recommended, warm slate + copper ring */
-.pricing-card.plan-gray{
-  background:linear-gradient(165deg,#FBF8F3 0%,#E8EDF2 55%,#D3DEE6 100%);
-  border:2px solid var(--copper-bright);
-  box-shadow:
-    inset 0 2px 0 rgba(255,255,255,0.9),
-    0 10px 24px rgba(224,120,86,0.18),
-    0 26px 54px rgba(14,26,43,0.16);
-}
-.pricing-card.plan-gray:hover{
-  box-shadow:0 34px 68px rgba(14,26,43,0.22),0 12px 28px rgba(224,120,86,0.25);
-}
-.pricing-card.plan-gray .pricing-label{color:var(--copper-bright)}
-.pricing-card.plan-gray .pricing-cta{background:var(--copper-bright)}
-.pricing-card.plan-gray .pricing-cta:hover{background:#C9745A}
-
-/* The corner flag replaces the old "featured = dark card" pattern. */
-.plan-flag{
-  position:absolute;top:18px;right:-34px;z-index:3;
-  transform:rotate(38deg);
-  background:var(--copper-bright);color:#fff;
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;font-weight:600;letter-spacing:0.12em;
-  padding:6px 40px;
-  box-shadow:0 4px 12px rgba(224,120,86,0.4);
-}
-
-/* BLACK — deep ink, light type */
-.pricing-card.plan-black{
-  background:linear-gradient(165deg,#39405A 0%,#232A3C 55%,#161B2A 100%);
-  border-color:rgba(255,255,255,0.16);
-  color:var(--cream);
-}
-.pricing-card.plan-black .pricing-price{color:var(--cream)}
-.pricing-card.plan-black .pricing-period{color:rgba(251,248,243,0.72)}
-.pricing-card.plan-black .pricing-features li{color:rgba(251,248,243,0.88)}
-.pricing-card.plan-black .pricing-label{color:#F5B59A}
-.pricing-card.plan-black .pricing-features li::before{color:#F5B59A}
-.pricing-card.plan-black .pricing-cta{background:#F5B59A;color:var(--ink)}
-.pricing-card.plan-black .pricing-cta:hover{background:#FFD0B8}
-
-.pricing-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.2em;color:var(--copper-bright);margin-bottom:14px;font-weight:600;position:relative;z-index:2}
-.pricing-price{font-family:'Fraunces',serif;font-size:64px;font-weight:700;line-height:1;color:var(--ink);margin-bottom:6px;letter-spacing:-0.04em;position:relative;z-index:2}
-.pricing-period{font-size:14px;color:var(--charcoal);margin-bottom:24px;position:relative;z-index:2}
-.pricing-features{list-style:none;margin-bottom:28px;position:relative;z-index:2;flex:1}
+.pricing-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.2em;color:var(--copper-bright);margin-bottom:14px;font-weight:600}
+.pricing-card.featured .pricing-label{color:var(--copper-bright)}
+.pricing-price{font-family:'Fraunces',serif;font-size:64px;font-weight:700;line-height:1;color:var(--ink);margin-bottom:6px;letter-spacing:-0.04em}
+.pricing-card.featured .pricing-price{color:var(--cream)}
+.pricing-period{font-size:14px;color:var(--charcoal);margin-bottom:24px}
+.pricing-card.featured .pricing-period{color:rgba(251,248,243,0.7)}
+.pricing-features{list-style:none;margin-bottom:28px}
 .pricing-features li{padding:8px 0;font-size:14px;display:flex;align-items:flex-start;gap:10px;color:var(--charcoal)}
+.pricing-card.featured .pricing-features li{color:rgba(251,248,243,0.85)}
 .pricing-features li::before{content:'✓';color:var(--copper-bright);font-weight:700;flex-shrink:0;font-size:14px}
 .pricing-cta{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
@@ -994,10 +914,11 @@ img{max-width:100%;display:block}
   font-family:inherit;font-size:14px;font-weight:600;
   background:var(--ink);color:var(--cream);
   border:none;cursor:pointer;transition:all .3s;
-  position:relative;z-index:2;
   box-shadow:0 4px 12px rgba(14,26,43,0.2),inset 0 1px 0 rgba(255,255,255,0.15);
 }
-.pricing-cta:hover{transform:translateY(-2px)}
+.pricing-cta:hover{background:var(--copper-bright);transform:translateY(-2px)}
+.pricing-card.featured .pricing-cta{background:var(--copper-bright)}
+.pricing-card.featured .pricing-cta:hover{background:#F08A6E}
 .referral-box{
   background:rgba(157,191,165,0.18);
   border:1px solid rgba(157,191,165,0.4);
@@ -1327,7 +1248,7 @@ html,body{max-width:100%;overflow-x:hidden}
   .hero-headline{padding:26px 18px}
   .phone-3d{width:196px;height:392px}
   .phone-body{border-radius:38px}
-  .phone-bezel,.phone-screen,.phone-chat{border-radius:34px}
+  .phone-bezel,.phone-screen{border-radius:34px}
   .hero-phone-card{padding:26px 12px 24px}
   .commands-box{padding:20px 12px}
   .cmd-row{padding:8px 8px}
@@ -1474,7 +1395,7 @@ html,body{max-width:100%;overflow-x:hidden}
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
     </div>
-    <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="nav-cta">
+    <a https://api.whatsapp.com/send/?phone=7795431177&text&type=phone_number&app_absent=0 target="_blank" class="nav-cta">
       <svg><use href="#i-whatsapp"/></svg>
       Start Free Trial
     </a>
@@ -1490,7 +1411,7 @@ html,body{max-width:100%;overflow-x:hidden}
   <a href="#referral" class="m-link">Referral</a>
   <a href="#pricing" class="m-link">Pricing</a>
   <a href="#faq" class="m-link">FAQ</a>
-  <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="nav-cta" style="margin-top:20px">
+  <a https://api.whatsapp.com/send/?phone=7795431177&text&type=phone_number&app_absent=0 target="_blank" class="nav-cta" style="margin-top:20px">
     <svg><use href="#i-whatsapp"/></svg>
     Start Free Trial
   </a>
@@ -1547,20 +1468,67 @@ html,body{max-width:100%;overflow-x:hidden}
               <div class="phone-volume-buttons"><span></span><span></span></div>
               <div class="phone-bezel">
                 <div class="phone-screen">
-                  <!-- Real WhatsApp screenshot as the phone screen. The CSS
-                       phone frame (buttons, bezel, floating tilt) is
-                       unchanged; only the chat CONTENT is now the actual
-                       screenshot. If chat.jpg can't load (e.g. missing
-                       from the folder), .failed hides it and the dark
-                       screen shows underneath. -->
-                  <img class="phone-chat" src="chat.jpg" onerror="this.classList.add('failed')"
-                       alt="Yukshya bot on WhatsApp: a PPTX file sent, saved as java_notes, then sent back."
-                       loading="eager" fetchpriority="high" decoding="async">
-                </div><!-- /.phone-screen -->
-              </div><!-- /.phone-bezel -->
-            </div><!-- /.phone-body -->
-          </div><!-- /.phone-3d -->
-        </div><!-- /.phone-stage -->
+
+                  <div class="phone-status">
+                    <span class="time">9:41</span>
+                    <span class="icons">
+                      <svg viewBox="0 0 16 12"><rect x="0" y="6" width="2" height="6" rx="0.5"/><rect x="3" y="4" width="2" height="8" rx="0.5"/><rect x="6" y="2" width="2" height="10" rx="0.5"/><rect x="9" y="0" width="2" height="12" rx="0.5"/></svg>
+                      <span style="font-size:9px;font-weight:700">5G</span>
+                      <svg viewBox="0 0 24 12"><rect x="0" y="0" width="20" height="12" rx="2.5" fill="none" stroke="#fff" stroke-width="1"/><rect x="2" y="2" width="14" height="8" rx="1"/><rect x="20.5" y="4" width="2" height="4" rx="0.5"/></svg>
+                    </span>
+                  </div>
+
+                  <div class="phone-island"></div>
+
+                  <div class="wa-header">
+                    <span class="back-arrow">‹</span>
+                    <div class="wa-avatar">Y</div>
+                    <div class="wa-contact">
+                      <span class="name">Yukshya Bot</span>
+                      <span class="status">online</span>
+                    </div>
+                    <div class="wa-actions">
+                      <svg><use href="#i-video"/></svg>
+                      <svg><use href="#i-phone"/></svg>
+                    </div>
+                  </div>
+
+                  <div class="wa-chat">
+                    <div class="wa-msg out file">
+                      <div class="file-icon"><svg><use href="#i-file"/></svg></div>
+                      <div class="file-info">
+                        <div class="fname">computer_arch.pdf</div>
+                        <div class="fmeta">save computer_arch</div>
+                      </div>
+                      <div class="time-row"><span class="time">9:38</span><span class="ticks">✓✓</span></div>
+                    </div>
+                    <div class="wa-msg in">
+                      <span class="check">✓</span> <span class="bold">Saved!</span> Use <em>send computer_arch</em>
+                      <div class="time-row"><span class="time">9:38</span></div>
+                    </div>
+                    <div class="wa-msg out">
+                      ask computer_arch: what is cache memory?
+                      <div class="time-row"><span class="time">9:39</span><span class="ticks">✓✓</span></div>
+                    </div>
+                    <div class="wa-msg in">
+                      Cache memory is small, fast memory between CPU and RAM. It stores frequently used data so the CPU doesn't wait for slower RAM access.
+                      <div class="time-row"><span class="time">9:39</span></div>
+                    </div>
+                  </div>
+
+                  <div class="wa-input">
+                    <div class="input-pill">
+                      <svg><use href="#i-smile"/></svg>
+                      <span>Message</span>
+                    </div>
+                    <div class="send-btn"><svg><use href="#i-mic"/></svg></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="phone-text">
           <span class="label">// real conversation</span>
           <h3 class="serif">Send a file. Ask anything. <br><span class="em">Get answers from YOUR notes.</span></h3>
@@ -1605,7 +1573,7 @@ html,body{max-width:100%;overflow-x:hidden}
         <h3 class="serif">Complete <span class="italic">command reference</span></h3>
         <div class="meta-pills">
           <span class="meta-pill">v2.0</span>
-          <span class="meta-pill copper">26 commands</span>
+          <span class="meta-pill copper">19 commands</span>
           <span class="meta-pill sage">free to read</span>
         </div>
       </div>
@@ -1614,38 +1582,31 @@ html,body{max-width:100%;overflow-x:hidden}
         <div class="cmd-category files">
           <h4 class="serif"><span class="cat-icon"><svg><use href="#i-folder"/></svg></span> Files</h4>
           <div class="cmd-row"><span class="cmd-name mono">save <span class="arg">&lt;name&gt;</span></span><span class="cmd-desc">Save a file with a custom name</span></div>
-          <div class="cmd-row"><span class="cmd-name mono">force save <span class="arg">&lt;name&gt;</span></span><span class="cmd-desc">Save even if the AI is unsure</span></div>
           <div class="cmd-row"><span class="cmd-name mono">send <span class="arg">&lt;name&gt;</span></span><span class="cmd-desc">Get a saved file back</span></div>
-          <div class="cmd-row"><span class="cmd-name mono">send <span class="arg">&lt;name&gt; &lt;page&gt;</span></span><span class="cmd-desc">One PDF page as an image</span></div>
-          <div class="cmd-row"><span class="cmd-name mono">save <span class="arg">&lt;name&gt; &lt;page&gt;</span></span><span class="cmd-desc">Save one page as its own file</span></div>
           <div class="cmd-row"><span class="cmd-name mono">list</span><span class="cmd-desc">See all your saved files</span></div>
           <div class="cmd-row"><span class="cmd-name mono">categories</span><span class="cmd-desc">Your files grouped by subject</span></div>
           <div class="cmd-row"><span class="cmd-name mono">make pdf</span><span class="cmd-desc">Turn photos into one PDF</span></div>
-          <div class="cmd-row"><span class="cmd-name mono">rename <span class="arg">&lt;old&gt; &lt;new&gt;</span></span><span class="cmd-desc">Change a file's name</span></div>
           <div class="cmd-row"><span class="cmd-name mono">delete <span class="arg">&lt;name&gt;</span></span><span class="cmd-desc">Remove a file permanently</span></div>
-          <div class="cmd-row"><span class="cmd-name mono">cancel</span><span class="cmd-desc">Stop whatever is running right now</span></div>
+          <div class="cmd-row"><span class="cmd-name mono">rename <span class="arg">&lt;old&gt; &lt;new&gt;</span></span><span class="cmd-desc">Change a file's name</span></div>
+          <div class="cmd-row"><span class="cmd-name mono">force save <span class="arg">&lt;name&gt;</span></span><span class="cmd-desc">Save even if the AI is unsure</span></div>
         </div>
         <div class="cmd-category ai">
           <h4 class="serif"><span class="cat-icon"><svg><use href="#i-bulb"/></svg></span> AI</h4>
           <div class="cmd-row"><span class="cmd-name mono">explain <span class="arg">&lt;name&gt;</span></span><span class="cmd-desc">AI summarises your file</span></div>
-          <div class="cmd-row"><span class="cmd-name mono">ask <span class="arg">&lt;name&gt;: question</span></span><span class="cmd-desc">Answers from your own notes</span></div>
-          <div class="cmd-row"><span class="cmd-name mono">study <span class="arg">&lt;name&gt;: question</span></span><span class="cmd-desc">Videos &amp; websites on that topic</span></div>
+          <div class="cmd-row"><span class="cmd-name mono">ask <span class="arg">&lt;name&gt;: question</span></span><span class="cmd-desc">Q&amp;A from a specific file</span></div>
           <div class="cmd-row"><span class="cmd-name mono">weak</span><span class="cmd-desc">Files you haven't revised lately</span></div>
         </div>
         <div class="cmd-category payment">
-          <h4 class="serif"><span class="cat-icon"><svg><use href="#i-card"/></svg></span> Account &amp; payment</h4>
-          <div class="cmd-row"><span class="cmd-name mono">stat</span><span class="cmd-desc">Days left, expiry &amp; file count</span></div>
-          <div class="cmd-row"><span class="cmd-name mono">pay</span><span class="cmd-desc">See the three plans</span></div>
+          <h4 class="serif"><span class="cat-icon"><svg><use href="#i-card"/></svg></span> Payment</h4>
+          <div class="cmd-row"><span class="cmd-name mono">pay</span><span class="cmd-desc">Razorpay link (auto)</span></div>
           <div class="cmd-row"><span class="cmd-name mono">pay upi</span><span class="cmd-desc">UPI ID for direct payment</span></div>
           <div class="cmd-row"><span class="cmd-name mono">paid <span class="arg">&lt;txn_id&gt;</span></span><span class="cmd-desc">Submit UPI transaction ID</span></div>
-          <div class="cmd-row"><span class="cmd-name mono">email <span class="arg">&lt;your@email&gt;</span></span><span class="cmd-desc">Register or change your email</span></div>
         </div>
         <div class="cmd-category other">
           <h4 class="serif"><span class="cat-icon"><svg><use href="#i-gift"/></svg></span> Other</h4>
           <div class="cmd-row"><span class="cmd-name mono">refer</span><span class="cmd-desc">Get your referral code</span></div>
           <div class="cmd-row"><span class="cmd-name mono">ref <span class="arg">&lt;CODE&gt;</span></span><span class="cmd-desc">Apply a friend's code</span></div>
-          <div class="cmd-row"><span class="cmd-name mono">privacy</span><span class="cmd-desc">What we store &amp; your rights</span></div>
-          <div class="cmd-row"><span class="cmd-name mono">delete account</span><span class="cmd-desc">Erase everything, permanently</span></div>
+          <div class="cmd-row"><span class="cmd-name mono">email <span class="arg">&lt;your@email&gt;</span></span><span class="cmd-desc">Register your email</span></div>
           <div class="cmd-row"><span class="cmd-name mono">support</span><span class="cmd-desc">Help, group link, contact</span></div>
           <div class="cmd-row"><span class="cmd-name mono">help</span><span class="cmd-desc">Show command list anytime</span></div>
         </div>
@@ -1823,10 +1784,9 @@ html,body{max-width:100%;overflow-x:hidden}
           <li>Photo → PDF &amp; categories</li>
           <li>Best for trying a full month</li>
         </ul>
-        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="pricing-cta">Start with Blue →</a>
+        <a https://api.whatsapp.com/send/?phone=7795431177&text&type=phone_number&app_absent=0 target="_blank" class="pricing-cta">Start with Blue →</a>
       </div>
-      <div class="pricing-card plan-gray reveal">
-        <span class="plan-flag">POPULAR</span>
+      <div class="pricing-card featured plan-gray reveal">
         <div class="pricing-label">⚪ Gray Access · Scholar</div>
         <div class="pricing-price serif">₹39</div>
         <div class="pricing-period">90 days · a full semester</div>
@@ -1836,7 +1796,7 @@ html,body{max-width:100%;overflow-x:hidden}
           <li>Photo → PDF &amp; categories</li>
           <li>Covers you through exams</li>
         </ul>
-        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="pricing-cta">Get Gray →</a>
+        <a https://api.whatsapp.com/send/?phone=7795431177&text&type=phone_number&app_absent=0 target="_blank" class="pricing-cta">Get Gray →</a>
       </div>
       <div class="pricing-card plan-black reveal">
         <div class="pricing-label">⚫ Black Access · Sage</div>
@@ -1848,14 +1808,14 @@ html,body{max-width:100%;overflow-x:hidden}
           <li>Photo → PDF &amp; categories</li>
           <li>Longest stretch, fewest renewals</li>
         </ul>
-        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="pricing-cta">Get Black →</a>
+        <a https://api.whatsapp.com/send/?phone=7795431177&text&type=phone_number&app_absent=0 target="_blank" class="pricing-cta">Get Black →</a>
       </div>
     </div>
     <p class="plan-note reveal">Same features in every plan — only the duration
     changes. Renew any time; new days are added to whatever you have left.</p>
     <div class="referral-box reveal">
-      🎁 <strong>Refer one friend — you both get 7 free days.</strong>
-      <br><span style="color:var(--charcoal);font-size:13px">Added instantly when they use your code · You need to be on a paid plan for your code to work</span>
+      🎁 <strong>Every friend who pays = 1 free week for you.</strong>
+      <br><span style="color:var(--charcoal);font-size:13px">Up to 4 friends · Added automatically as each one pays · No deadline</span>
     </div>
   </div>
 </section>
@@ -1871,34 +1831,34 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="how-grid">
       <div class="how-card reveal">
         <div class="how-num serif">01</div>
-        <h4 class="serif">Be on a paid plan</h4>
-        <p>Your code only works once you're a paying member — any plan will do. Type <em>refer</em> to see your unique 6-character code.</p>
+        <h4 class="serif">Get your code</h4>
+        <p>Type <em>refer</em> in your WhatsApp chat with Yukshya. You'll instantly get your own unique 6-character referral code.</p>
       </div>
       <div class="how-card reveal">
         <div class="how-num serif">02</div>
-        <h4 class="serif">Send it to one friend</h4>
-        <p>Share your code with a friend. They type <em>ref YOURCODE</em> in their own chat with Yukshya. They don't need to have paid.</p>
+        <h4 class="serif">Share with friends</h4>
+        <p>Send your code to friends. Each friend types <em>ref YOURCODE</em> in their own chat with Yukshya to apply it to their account.</p>
       </div>
       <div class="how-card reveal">
         <div class="how-num serif">03</div>
-        <h4 class="serif">You both get 7 days</h4>
-        <p>The moment they apply it, <em>7 free days</em> are added to both accounts — instantly. Then the code is used up.</p>
+        <h4 class="serif">They pay, you get a week</h4>
+        <p>The moment a friend who used your code pays for any plan, <em>1 free week</em> is added to your account. No forms, no waiting for the others.</p>
       </div>
     </div>
     <div class="referral-box reveal" style="margin-top:32px">
-      🎁 <strong>7 free days for you. 7 free days for your friend.</strong>
-      <br><span style="color:var(--charcoal);font-size:13px">Added the instant the code is applied · No waiting for them to pay · No deadline</span>
+      🎁 <strong>1 friend pays = 1 free week. All 4 pay = 4 free weeks.</strong>
+      <br><span style="color:var(--charcoal);font-size:13px">Each week is added the moment that friend pays · No waiting for the others · No deadline</span>
     </div>
     <div class="rules-box reveal">
       <h4 class="serif">📋 Referral rules</h4>
       <ol>
-        <li>You must be on a <strong>paid plan</strong> for your code to work. Codes from trial accounts are not active.</li>
-        <li>Type <em>refer</em> in your chat with Yukshya to see your unique 6-character code.</li>
-        <li>Your friend types <em>ref YOURCODE</em> in their own chat. They do <strong>not</strong> need to have paid.</li>
-        <li>You <strong>both</strong> get <strong>7 free days</strong> immediately — added on top of whatever time you already have.</li>
-        <li>A code works <strong>once</strong>. After one friend uses it, that code is spent.</li>
-        <li>One reward per person, ever — whether you refer someone or get referred.</li>
-        <li>There is <strong>no deadline</strong>, and nothing to claim. Days appear straight away.</li>
+        <li>Type <em>refer</em> in your chat with Yukshya to get your unique 6-character referral code.</li>
+        <li>Your friend enters <em>ref YOURCODE</em> in their own chat with Yukshya to link their account to you.</li>
+        <li>A referral only counts once that friend becomes a <strong>paying</strong> user on any plan — free trials do not count.</li>
+        <li>Each friend who pays earns you <strong>1 free week</strong> — added straight away, not held back until the others pay.</li>
+        <li>You can refer up to <strong>4 friends</strong>, so the most you can earn is <strong>4 free weeks</strong>.</li>
+        <li>There is <strong>no deadline</strong>. Your code stays active and weeks are added whenever a friend pays.</li>
+        <li>No forms and no claiming needed — your referral count is tracked for you.</li>
         <li>Referring yourself, or using fake or duplicate numbers, will not count.</li>
       </ol>
     </div>
@@ -1918,7 +1878,7 @@ html,body{max-width:100%;overflow-x:hidden}
         <div class="connect-icon"><svg><use href="#i-whatsapp"/></svg></div>
         <h4 class="serif">Chat with bot</h4>
         <p>Start your free trial</p>
-        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank">Open WhatsApp →</a>
+        <a https://api.whatsapp.com/send/?phone=7795431177&text&type=phone_number&app_absent=0 target="_blank">Open WhatsApp →</a>
       </div>
       <div class="connect-card sup reveal">
         <div class="connect-icon"><svg><use href="#i-megaphone"/></svg></div>
@@ -1987,7 +1947,7 @@ html,body{max-width:100%;overflow-x:hidden}
       </div>
       <div class="faq-item reveal">
         <div class="faq-q">How does the referral system work?<div class="faq-toggle">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">Once you're on a paid plan, type "refer" to get your unique 6-character code. Send it to one friend — they type "ref YOURCODE" in their own chat, and you both instantly get 7 free days added to your accounts. Your friend doesn't need to have paid. Each code works once, and it's one reward per person whether you refer someone or get referred.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Type "refer" to get your unique 6-character code. Share it — friends type "ref YOURCODE" in their own chat. Every friend who pays for any plan earns you 1 free week, added to your account the moment they pay. You can refer up to 4 friends, so 4 free weeks in total. There is no deadline and nothing to claim.</div></div>
       </div>
     </div>
   </div>
@@ -1999,7 +1959,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="final-card reveal">
       <h2 class="serif">Ready to study <span class="italic">smarter?</span></h2>
       <p>7 days free. No app. Just WhatsApp.</p>
-      <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="final-cta-btn">
+      <a https://api.whatsapp.com/send/?phone=7795431177&text&type=phone_number&app_absent=0 target="_blank" class="final-cta-btn">
         <svg><use href="#i-whatsapp"/></svg>
         Start free on WhatsApp →
       </a>
@@ -2015,7 +1975,7 @@ html,body{max-width:100%;overflow-x:hidden}
         <div class="nav-logo serif">Yukshya<span class="dot"></span></div>
         <p>Your AI-powered study assistant on WhatsApp. Save files, get explanations, ace your exams — all in one chat.</p>
         <div class="footer-socials">
-          <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="fs-wa" aria-label="WhatsApp"><svg><use href="#i-whatsapp"/></svg></a>
+          <a https://api.whatsapp.com/send/?phone=7795431177&text&type=phone_number&app_absent=0 target="_blank" class="fs-wa" aria-label="WhatsApp"><svg><use href="#i-whatsapp"/></svg></a>
           <a href="https://www.instagram.com/yukshyabot?igsh=MW11MjRrOXJxMnZzNw==" target="_blank" class="fs-ig" aria-label="Instagram"><svg><use href="#i-instagram"/></svg></a>
           <a href="https://www.facebook.com/share/1FbhJ76A3Z/" target="_blank" class="fs-fb" aria-label="Facebook"><svg><use href="#i-facebook"/></svg></a>
           <a href="mailto:yukshyabot@gmail.com" class="fs-em" aria-label="Email"><svg><use href="#i-email"/></svg></a>
@@ -2043,7 +2003,7 @@ html,body{max-width:100%;overflow-x:hidden}
   </div>
 </footer>
 
-<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="float-wa" aria-label="WhatsApp">
+<a https://api.whatsapp.com/send/?phone=7795431177&text&type=phone_number&app_absent=0 target="_blank" class="float-wa" aria-label="WhatsApp">
   <svg><use href="#i-whatsapp"/></svg>
 </a>
 
