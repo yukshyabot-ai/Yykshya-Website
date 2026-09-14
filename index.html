@@ -1441,28 +1441,6 @@ html,body{max-width:100%;overflow-x:hidden}
   *{animation-duration:0.01ms!important;transition-duration:0.01ms!important}
   .reveal{opacity:1;transform:none}
 }
-
-/* ═══════ LAUNCH GATE ═══════ */
-.launch-modal{
-  position:fixed !important;top:0 !important;left:0 !important;right:0 !important;bottom:0 !important;width:100vw;height:100dvh;z-index:99999;display:flex;align-items:center;justify-content:center;
-  padding:24px;box-sizing:border-box;background:rgba(8,17,30,0.58);backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity .3s ease;
-}
-.launch-modal.active{opacity:1;pointer-events:auto}
-.launch-card{
-  position:relative;min-width:min(420px,calc(100vw - 48px));padding:48px 42px;text-align:center;
-  border-radius:32px;background:linear-gradient(135deg,rgba(251,248,243,.96),rgba(245,181,154,.94));
-  border:1px solid rgba(255,255,255,.9);
-  box-shadow:0 30px 90px rgba(8,17,30,.35),inset 0 2px 0 rgba(255,255,255,.9);
-}
-.launch-card h2{font-family:'Fraunces',serif;font-size:clamp(38px,7vw,58px);line-height:1;letter-spacing:-.03em;color:var(--ink);margin:0 0 14px}
-.launch-card .launch-date{font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.16em;font-weight:600;color:var(--copper-bright);text-transform:uppercase}
-.launch-close{
-  position:absolute;top:12px;right:14px;width:36px;height:36px;border:0;border-radius:50%;
-  background:rgba(27,32,50,.08);color:var(--ink);font-size:24px;line-height:1;cursor:pointer;
-}
-.launch-close:hover{background:rgba(27,32,50,.15)}
-
 </style>
 </head>
 <body>
@@ -1579,7 +1557,7 @@ html,body{max-width:100%;overflow-x:hidden}
       <a href="#faq">FAQ</a>
       <a href="#legal">Legal</a>
     </div>
-    <a href="#" data-launch-gated="true" data-launch-url="https://wa.me/message/PYPPQ2PKBX7QI1" class="nav-cta">
+    <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="nav-cta">
       <svg><use href="#i-whatsapp"/></svg>
       Start Free Trial
     </a>
@@ -1596,7 +1574,7 @@ html,body{max-width:100%;overflow-x:hidden}
   <a href="#pricing" class="m-link">Pricing</a>
   <a href="#faq" class="m-link">FAQ</a>
   <a href="#legal" class="m-link">Legal</a>
-  <a href="#" data-launch-gated="true" data-launch-url="https://wa.me/message/PYPPQ2PKBX7QI1" class="nav-cta" style="margin-top:20px">
+  <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="nav-cta" style="margin-top:20px">
     <svg><use href="#i-whatsapp"/></svg>
     Start Free Trial
   </a>
@@ -1929,7 +1907,7 @@ html,body{max-width:100%;overflow-x:hidden}
           <li>Photo → PDF &amp; categories</li>
           <li>Best for trying a full month</li>
         </ul>
-        <a href="#" data-launch-gated="true" data-launch-url="https://wa.me/message/PYPPQ2PKBX7QI1" class="pricing-cta">Start with Blue →</a>
+        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="pricing-cta">Start with Blue →</a>
       </div>
       <div class="pricing-card plan-gray reveal">
         <span class="plan-flag">POPULAR</span>
@@ -1942,7 +1920,7 @@ html,body{max-width:100%;overflow-x:hidden}
           <li>Photo → PDF &amp; categories</li>
           <li>Covers you through exams</li>
         </ul>
-        <a href="#" data-launch-gated="true" data-launch-url="https://wa.me/message/PYPPQ2PKBX7QI1" class="pricing-cta">Get Gray →</a>
+        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="pricing-cta">Get Gray →</a>
       </div>
       <div class="pricing-card plan-black reveal">
         <div class="pricing-label">⚫ Black Access · Sage</div>
@@ -1954,7 +1932,7 @@ html,body{max-width:100%;overflow-x:hidden}
           <li>Photo → PDF &amp; categories</li>
           <li>Longest stretch, fewest renewals</li>
         </ul>
-        <a href="#" data-launch-gated="true" data-launch-url="https://wa.me/message/PYPPQ2PKBX7QI1" class="pricing-cta">Get Black →</a>
+        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="pricing-cta">Get Black →</a>
       </div>
     </div>
     <p class="plan-note reveal">Same features in every plan — only the duration
@@ -2024,7 +2002,7 @@ html,body{max-width:100%;overflow-x:hidden}
         <div class="connect-icon"><svg><use href="#i-whatsapp"/></svg></div>
         <h4 class="serif">Chat with bot</h4>
         <p>Start your free trial</p>
-        <a href="#" data-launch-gated="true" data-launch-url="https://wa.me/message/PYPPQ2PKBX7QI1">Open WhatsApp →</a>
+        <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank">Open WhatsApp →</a>
       </div>
       <div class="connect-card sup reveal">
         <div class="connect-icon"><svg><use href="#i-megaphone"/></svg></div>
@@ -2376,7 +2354,7 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="final-card reveal">
       <h2 class="serif">Ready to study <span class="italic">smarter?</span></h2>
       <p>7 days free. No app. Just WhatsApp.</p>
-      <a href="#" data-launch-gated="true" data-launch-url="https://wa.me/message/PYPPQ2PKBX7QI1" class="final-cta-btn">
+      <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="final-cta-btn">
         <svg><use href="#i-whatsapp"/></svg>
         Start free on WhatsApp →
       </a>
@@ -2392,7 +2370,7 @@ html,body{max-width:100%;overflow-x:hidden}
         <div class="nav-logo serif">Yukshya<span class="dot"></span></div>
         <p>Your AI-powered study assistant on WhatsApp. Save files, get explanations, ace your exams — all in one chat.</p>
         <div class="footer-socials">
-          <a href="#" data-launch-gated="true" data-launch-url="https://wa.me/message/PYPPQ2PKBX7QI1" class="fs-wa" aria-label="WhatsApp"><svg><use href="#i-whatsapp"/></svg></a>
+          <a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="fs-wa" aria-label="WhatsApp"><svg><use href="#i-whatsapp"/></svg></a>
           <a href="https://www.instagram.com/yukshyabot?igsh=MW11MjRrOXJxMnZzNw==" target="_blank" class="fs-ig" aria-label="Instagram"><svg><use href="#i-instagram"/></svg></a>
           <a href="https://www.facebook.com/share/1FbhJ76A3Z/" target="_blank" class="fs-fb" aria-label="Facebook"><svg><use href="#i-facebook"/></svg></a>
           <a href="mailto:yukshyabot@gmail.com" class="fs-em" aria-label="Email"><svg><use href="#i-email"/></svg></a>
@@ -2431,53 +2409,11 @@ html,body{max-width:100%;overflow-x:hidden}
   </div>
 </footer>
 
-<a href="#" data-launch-gated="true" data-launch-url="https://wa.me/message/PYPPQ2PKBX7QI1" class="float-wa" aria-label="WhatsApp">
+<a href="https://wa.me/message/PYPPQ2PKBX7QI1" target="_blank" class="float-wa" aria-label="WhatsApp">
   <svg><use href="#i-whatsapp"/></svg>
 </a>
 
-
-<!-- ═══════ COMING SOON / LAUNCH GATE ═══════ -->
-<div class="launch-modal" id="launchModal" aria-hidden="true">
-  <div class="launch-card" role="dialog" aria-modal="true" aria-label="Yukshya launch date">
-    <button class="launch-close" id="launchClose" aria-label="Close">×</button>
-    <h2>COMING SOON</h2>
-    <div class="launch-date">14 SEPTEMBER 2026</div>
-  </div>
-</div>
-
 <script>
-
-// Keep bot access closed until the official launch date.
-const launchModal = document.getElementById('launchModal');
-const launchClose = document.getElementById('launchClose');
-const launchDate = new Date('2026-09-14T00:00:00+05:30');
-const botLinks = document.querySelectorAll('a[data-launch-gated="true"]');
-
-function botIsLaunched(){ return new Date() >= launchDate; }
-function showLaunchModal(e){
-  if (botIsLaunched()) return;
-  if (e) { e.preventDefault(); e.stopPropagation(); }
-  window.scrollTo(0, 0);
-  launchModal.classList.add('active');
-  launchModal.setAttribute('aria-hidden','false');
-  document.body.style.overflow='hidden';
-}
-function hideLaunchModal(){
-  launchModal.classList.remove('active');
-  launchModal.setAttribute('aria-hidden','true');
-  document.body.style.overflow='';
-}
-
-botLinks.forEach(link => {
-  link.addEventListener('click', showLaunchModal);
-  if (botIsLaunched()) {
-    link.href = link.dataset.launchUrl;
-    link.target = '_blank';
-  }
-});
-launchClose.addEventListener('click', hideLaunchModal);
-launchModal.addEventListener('click', e => { if (e.target === launchModal) hideLaunchModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') hideLaunchModal(); });
 const nav = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
   if (window.scrollY > 50) nav.classList.add('scrolled');
